@@ -1,0 +1,19 @@
+var int numerouno, numerodos;
+function int suma(int uno, int dos)
+{
+    var int resultado;
+    resultado = uno + dos;
+    return resultado;
+}
+program calculadora {
+    numerouno = 5;
+    numerodos = 10;
+    if (numerouno < numerodos)
+    {
+        print(suma(numerouno, numerodos));
+    }
+    else 
+    {
+        print("feos");
+    }
+}
