@@ -1,0 +1,18 @@
+var int A, B, C, D;
+function void uno()
+{
+  var decimal X, Y, Z;
+  X = A * (B + C) / D;
+  Y = X + X;
+  Z = X * Y;
+  return Z;
+}
+program test{
+  A = 1;
+  B = 2;
+  C = 3;
+  D = 4;
+  B = A + B + C - D * A * B + C;
+  print(uno());
+
+}

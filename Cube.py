@@ -1,161 +1,155 @@
 import numpy as numpy
+from Constants import *
 
 # Semantic Cube
 
-Cube = numpy.zeros((12, 3, 3))
+Cube = numpy.zeros((13, 3, 3))
 
 # CUBE
 # x = operator, y = operand1, z = operand2
-# Operands:
-CUBE_PLUS = 0
-CUBE_MINUS = 1
-CUBE_TIMES = 2
-CUBE_DIVIDE = 3
-CUBE_GREATERTHAN = 4
-CUBE_GREATEREQUAL = 5
-CUBE_LESSTHAN = 6
-CUBE_LESSEQUAL = 7
-CUBE_EQUAL = 8
-CUBE_NOTEQUAL = 9
-CUBE_AND = 10
-CUBE_OR = 11
-
-# TYPES
-CUBE_INT = 0
-CUBE_DECIMAL = 1
-CUBE_BOOL = 2
-CUBE_ERROR = -1
-
 
 def InitializeCube():
     # PLUS
-    Cube[CUBE_PLUS, CUBE_INT, CUBE_INT] = CUBE_INT
-    Cube[CUBE_PLUS, CUBE_INT, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_PLUS, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_PLUS, CUBE_DECIMAL, CUBE_INT] = CUBE_DECIMAL
-    Cube[CUBE_PLUS, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_PLUS, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_PLUS, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_PLUS, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_PLUS, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.Plus, Types.Int, Types.Int] = Types.Int
+    Cube[Operations.Plus, Types.Int, Types.Decimal] = Types.Decimal
+    Cube[Operations.Plus, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Plus, Types.Decimal, Types.Int] = Types.Decimal
+    Cube[Operations.Plus, Types.Decimal, Types.Decimal] = Types.Decimal
+    Cube[Operations.Plus, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Plus, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Plus, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Plus, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # MINUS
-    Cube[CUBE_MINUS, CUBE_INT, CUBE_INT] = CUBE_INT
-    Cube[CUBE_MINUS, CUBE_INT, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_MINUS, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_MINUS, CUBE_DECIMAL, CUBE_INT] = CUBE_DECIMAL
-    Cube[CUBE_MINUS, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_MINUS, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_MINUS, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_MINUS, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_MINUS, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.Minus, Types.Int, Types.Int] = Types.Int
+    Cube[Operations.Minus, Types.Int, Types.Decimal] = Types.Decimal
+    Cube[Operations.Minus, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Minus, Types.Decimal, Types.Int] = Types.Decimal
+    Cube[Operations.Minus, Types.Decimal, Types.Decimal] = Types.Decimal
+    Cube[Operations.Minus, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Minus, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Minus, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Minus, Types.Bool, Types.Bool] = Errors.TypeMismatch
     
     # TIMES
-    Cube[CUBE_TIMES, CUBE_INT, CUBE_INT] = CUBE_INT
-    Cube[CUBE_TIMES, CUBE_INT, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_TIMES, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_TIMES, CUBE_DECIMAL, CUBE_INT] = CUBE_DECIMAL
-    Cube[CUBE_TIMES, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_TIMES, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_TIMES, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_TIMES, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_TIMES, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.Times, Types.Int, Types.Int] = Types.Int
+    Cube[Operations.Times, Types.Int, Types.Decimal] = Types.Decimal
+    Cube[Operations.Times, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Times, Types.Decimal, Types.Int] = Types.Decimal
+    Cube[Operations.Times, Types.Decimal, Types.Decimal] = Types.Decimal
+    Cube[Operations.Times, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Times, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Times, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Times, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # DIVIDE
-    Cube[CUBE_DIVIDE, CUBE_INT, CUBE_INT] = CUBE_DECIMAL
-    Cube[CUBE_DIVIDE, CUBE_INT, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_DIVIDE, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_DIVIDE, CUBE_DECIMAL, CUBE_INT] = CUBE_DECIMAL
-    Cube[CUBE_DIVIDE, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_DECIMAL
-    Cube[CUBE_DIVIDE, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_DIVIDE, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_DIVIDE, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_DIVIDE, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.Divide, Types.Int, Types.Int] = Types.Decimal
+    Cube[Operations.Divide, Types.Int, Types.Decimal] = Types.Decimal
+    Cube[Operations.Divide, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Divide, Types.Decimal, Types.Int] = Types.Decimal
+    Cube[Operations.Divide, Types.Decimal, Types.Decimal] = Types.Decimal
+    Cube[Operations.Divide, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Divide, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Divide, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Divide, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # GREATERTHAN
-    Cube[CUBE_GREATERTHAN, CUBE_INT, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_GREATERTHAN, CUBE_INT, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_GREATERTHAN, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_GREATERTHAN, CUBE_DECIMAL, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_GREATERTHAN, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_GREATERTHAN, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_GREATERTHAN, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_GREATERTHAN, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_GREATERTHAN, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.GreaterThan, Types.Int, Types.Int] = Types.Bool
+    Cube[Operations.GreaterThan, Types.Int, Types.Decimal] = Types.Bool
+    Cube[Operations.GreaterThan, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.GreaterThan, Types.Decimal, Types.Int] = Types.Bool
+    Cube[Operations.GreaterThan, Types.Decimal, Types.Decimal] = Types.Bool
+    Cube[Operations.GreaterThan, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.GreaterThan, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.GreaterThan, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.GreaterThan, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # GREATEREQUAL
-    Cube[CUBE_GREATEREQUAL, CUBE_INT, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_GREATEREQUAL, CUBE_INT, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_GREATEREQUAL, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_GREATEREQUAL, CUBE_DECIMAL, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_GREATEREQUAL, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_GREATEREQUAL, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_GREATEREQUAL, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_GREATEREQUAL, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_GREATEREQUAL, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.GreaterEqual, Types.Int, Types.Int] = Types.Bool
+    Cube[Operations.GreaterEqual, Types.Int, Types.Decimal] = Types.Bool
+    Cube[Operations.GreaterEqual, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.GreaterEqual, Types.Decimal, Types.Int] = Types.Bool
+    Cube[Operations.GreaterEqual, Types.Decimal, Types.Decimal] = Types.Bool
+    Cube[Operations.GreaterEqual, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.GreaterEqual, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.GreaterEqual, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.GreaterEqual, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # LESSTHAN
-    Cube[CUBE_LESSTHAN, CUBE_INT, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_LESSTHAN, CUBE_INT, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_LESSTHAN, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_LESSTHAN, CUBE_DECIMAL, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_LESSTHAN, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_LESSTHAN, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_LESSTHAN, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_LESSTHAN, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_LESSTHAN, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.LessThan, Types.Int, Types.Int] = Types.Bool
+    Cube[Operations.LessThan, Types.Int, Types.Decimal] = Types.Bool
+    Cube[Operations.LessThan, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.LessThan, Types.Decimal, Types.Int] = Types.Bool
+    Cube[Operations.LessThan, Types.Decimal, Types.Decimal] = Types.Bool
+    Cube[Operations.LessThan, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.LessThan, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.LessThan, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.LessThan, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # LESSEQUAL
-    Cube[CUBE_LESSEQUAL, CUBE_INT, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_LESSEQUAL, CUBE_INT, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_LESSEQUAL, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_LESSEQUAL, CUBE_DECIMAL, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_LESSEQUAL, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_LESSEQUAL, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_LESSEQUAL, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_LESSEQUAL, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_LESSEQUAL, CUBE_BOOL, CUBE_BOOL] = CUBE_ERROR
+    Cube[Operations.LessEqual, Types.Int, Types.Int] = Types.Bool
+    Cube[Operations.LessEqual, Types.Int, Types.Decimal] = Types.Bool
+    Cube[Operations.LessEqual, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.LessEqual, Types.Decimal, Types.Int] = Types.Bool
+    Cube[Operations.LessEqual, Types.Decimal, Types.Decimal] = Types.Bool
+    Cube[Operations.LessEqual, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.LessEqual, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.LessEqual, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.LessEqual, Types.Bool, Types.Bool] = Errors.TypeMismatch
 
     # EQUAL
-    Cube[CUBE_EQUAL, CUBE_INT, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_EQUAL, CUBE_INT, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_EQUAL, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_EQUAL, CUBE_DECIMAL, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_EQUAL, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_EQUAL, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_EQUAL, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_EQUAL, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_EQUAL, CUBE_BOOL, CUBE_BOOL] = CUBE_BOOL
+    Cube[Operations.Equal, Types.Int, Types.Int] = Types.Bool
+    Cube[Operations.Equal, Types.Int, Types.Decimal] = Types.Bool
+    Cube[Operations.Equal, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Equal, Types.Decimal, Types.Int] = Types.Bool
+    Cube[Operations.Equal, Types.Decimal, Types.Decimal] = Types.Bool
+    Cube[Operations.Equal, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Equal, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Equal, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Equal, Types.Bool, Types.Bool] = Types.Bool
 
     # NOTEQUAL
-    Cube[CUBE_NOTEQUAL, CUBE_INT, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_NOTEQUAL, CUBE_INT, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_NOTEQUAL, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_NOTEQUAL, CUBE_DECIMAL, CUBE_INT] = CUBE_BOOL
-    Cube[CUBE_NOTEQUAL, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_BOOL
-    Cube[CUBE_NOTEQUAL, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_NOTEQUAL, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_NOTEQUAL, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_NOTEQUAL, CUBE_BOOL, CUBE_BOOL] = CUBE_BOOL
+    Cube[Operations.NotEqual, Types.Int, Types.Int] = Types.Bool
+    Cube[Operations.NotEqual, Types.Int, Types.Decimal] = Types.Bool
+    Cube[Operations.NotEqual, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.NotEqual, Types.Decimal, Types.Int] = Types.Bool
+    Cube[Operations.NotEqual, Types.Decimal, Types.Decimal] = Types.Bool
+    Cube[Operations.NotEqual, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.NotEqual, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.NotEqual, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.NotEqual, Types.Bool, Types.Bool] = Types.Bool
 
     # AND
-    Cube[CUBE_AND, CUBE_INT, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_INT, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_DECIMAL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_AND, CUBE_BOOL, CUBE_BOOL] = CUBE_BOOL
+    Cube[Operations.And, Types.Int, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Int, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Decimal, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Decimal, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.And, Types.Bool, Types.Bool] = Types.Bool
 
     # OR
-    Cube[CUBE_OR, CUBE_INT, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_INT, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_INT, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_DECIMAL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_DECIMAL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_DECIMAL, CUBE_BOOL] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_BOOL, CUBE_INT] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_BOOL, CUBE_DECIMAL] = CUBE_ERROR
-    Cube[CUBE_OR, CUBE_BOOL, CUBE_BOOL] = CUBE_BOOL
+    Cube[Operations.Or, Types.Int, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Int, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Decimal, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Decimal, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Or, Types.Bool, Types.Bool] = Types.Bool
+
+    # ASSIGN
+    Cube[Operations.Assign, Types.Int, Types.Int] = Types.Int
+    Cube[Operations.Assign, Types.Int, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Assign, Types.Int, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Assign, Types.Decimal, Types.Int] = Types.Decimal
+    Cube[Operations.AssignOr, Types.Decimal, Types.Decimal] = Types.Decimal
+    Cube[Operations.AssignOr, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Assign, Types.Bool, Types.Int] = Errors.TypeMismatch
+    Cube[Operations.Assign, Types.Bool, Types.Decimal] = Errors.TypeMismatch
+    Cube[Operations.Assign, Types.Bool, Types.Bool] = Types.Bool
+
+InitializeCube()
