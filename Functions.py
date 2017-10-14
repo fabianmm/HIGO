@@ -3,21 +3,25 @@ from pprint import *
 from Cube import *
 
 def buildQuad(operator, term1, term2, result):
-  quad = {'operator' : operator, 'term1' : term1, 'term2' : term2, 'result' : result}
+  quad = {'operation' : operator, 'term1' : term1, 'term2' : term2, 'result' : result}
   # print(quad)
   return quad
 
-def getOperationCode(operand):
-  if operand == '+':
+def getOperationCode(operation):
+  if operation == '+':
     return Operations.Plus
-  if operand == '-':
+  if operation == '-':
     return Operations.Minus
-  if operand == '*':
+  if operation == '*':
     return Operations.Times
-  if operand == '/':
+  if operation == '/':
     return Operations.Divide
-  if operand == '=':
+  if operation == '=':
     return Operations.Assign
+  if operation == 'readto':
+    return Operations.Read
+  if operation == 'print':
+    return Operations.Print
 
 def printStacks(operations, operands, types):
   print("Operations: ", operations) 
@@ -28,7 +32,7 @@ def printQuads(quads):
   i = 0
   print("QUADRUPLES")
   for item in quads:
-    print(str(i) + ": ", str(item['operator']), str(item['term1']), str(item['term2']), str(item['result']))
+    print(str(i) + ": ", str(item['operation']), str(item['term1']), str(item['term2']), str(item['result']))
     i = i + 1
 
 def getTypeFromCode(typeCode):
@@ -55,3 +59,7 @@ def generateQuad(operationStack, operandStack, typesStack, temporalCounter, quad
   else:
       print("Error: Type mismatch {} and {}".format(getTypeFromCode(type1), getTypeFromCode(type2)))
       exit(1)
+
+def generateOneArgQuadruple(operation, result):
+  quad = {'operation' : operation, 'term1' : Operations.Null, 'term2' : Operations.Null, 'result' : result}
+  return quad

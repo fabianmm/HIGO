@@ -146,8 +146,8 @@ def InitializeCube():
     Cube[Operations.Assign, Types.Int, Types.Decimal] = Errors.TypeMismatch
     Cube[Operations.Assign, Types.Int, Types.Bool] = Errors.TypeMismatch
     Cube[Operations.Assign, Types.Decimal, Types.Int] = Types.Decimal
-    Cube[Operations.AssignOr, Types.Decimal, Types.Decimal] = Types.Decimal
-    Cube[Operations.AssignOr, Types.Decimal, Types.Bool] = Errors.TypeMismatch
+    Cube[Operations.Assign, Types.Decimal, Types.Decimal] = Types.Decimal
+    Cube[Operations.Assign, Types.Decimal, Types.Bool] = Errors.TypeMismatch
     Cube[Operations.Assign, Types.Bool, Types.Int] = Errors.TypeMismatch
     Cube[Operations.Assign, Types.Bool, Types.Decimal] = Errors.TypeMismatch
     Cube[Operations.Assign, Types.Bool, Types.Bool] = Types.Bool

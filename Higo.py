@@ -203,7 +203,7 @@ def p_READ(p):
     '''READ : readto lp id rp semicolon'''
 
 def p_PRINT(p):
-    '''PRINT : print lp EXPRESSION rp semicolon'''
+    '''PRINT : print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon'''
 
 def p_FUNCCALL(p):
     '''FUNCCALL : id lp CALLPARAMETERS rp semicolon'''
@@ -436,6 +436,15 @@ def p_SEM_PUSH_CONSTANT(p):
     printStacks(operatorStack, operandStack, typesStack)
     print(" ")
 
+def p_SEM_CREATE_ONEARG_QUAD(p):
+    '''SEM_CREATE_ONEARG_QUAD : empty'''
+    global quadCounter
+    operation = operatorStack.pop()
+    typesStack.pop()
+    result = operandStack.pop()
+    quad = generateOneArgQuadruple(operation, result)
+    quadruples.append(quad)
+    quadCounter = quadCounter + 1
 # Building the parser with a test
 import ply.yacc as yacc
 

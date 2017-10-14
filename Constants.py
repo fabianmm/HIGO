@@ -22,6 +22,6 @@ class Operations:
   NotEqual = 9
   And = 10
   Or = 11
-  Parenthesis = 12
-  Assign = 13
-
+  Assign = 12
+  Parenthesis = 13
+  Print = 14
