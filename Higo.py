@@ -17,6 +17,8 @@ operandStack = []
 operatorStack = []
 typesStack = []
 temporalCounter = 0
+jumpStack = []
+
 
 ############ LEXER ############
 
@@ -214,38 +216,38 @@ def p_CALLPARAMETERS(p):
                       | empty'''
 
 def p_CONDITION(p):
-    '''CONDITION : if lp EXPRESSION rp BLOCK ELSEBLOCK'''
+    '''CONDITION : if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END'''
 
 def p_ELSEBLOCK(p):
-    '''ELSEBLOCK : else BLOCK
+    '''ELSEBLOCK : else SEM_GENANDFILL_GOTO BLOCK
                  | empty'''
 
 def p_LOOP(p):
-    '''LOOP : while lp EXPRESSION rp BLOCK'''
+    '''LOOP : while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP'''
 
 def p_RETURN(p):
     '''RETURN : return EXPRESSION semicolon'''
                 
 def p_EXPRESSION(p):
-    '''EXPRESSION : NOT SUPEREXP
-                  | NOT SUPEREXP and NOT SUPEREXP
-                  | NOT SUPEREXP or NOT SUPEREXP'''
+    '''EXPRESSION : NOT SUPEREXP SEM_RESOLVE_NOT
+                  | NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+                  | NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR'''
 
 def p_NOT(p):
-    '''NOT : not 
+    '''NOT : not SEM_PUSH_OPERATOR
            | empty'''
 
 def p_SUPEREXP(p):
     '''SUPEREXP : EXP
-                | EXP RELOP EXP'''
+                | EXP RELOP EXP SEM_RESOLVE_RELOP'''
 
 def p_RELOP(p):
-    '''RELOP : gt
-             | ge
-             | lt
-             | le
-             | ee
-             | ne'''
+    '''RELOP : gt SEM_PUSH_OPERATOR
+             | ge SEM_PUSH_OPERATOR
+             | lt SEM_PUSH_OPERATOR
+             | le SEM_PUSH_OPERATOR
+             | ee SEM_PUSH_OPERATOR
+             | ne SEM_PUSH_OPERATOR'''
 
 def p_EXP(p): 
     '''EXP : TERM SEM_RESOLVE_PLUSMINUS
@@ -405,11 +407,9 @@ def p_SEM_ASSIGN(p):
         quadCounter = quadCounter + 1
 
 def p_SEM_PUSH_CONSTANT(p):
-    '''SEM_PUSH_CONSTANT : empty'''
-    
+    '''SEM_PUSH_CONSTANT : empty'''    
     operand = p[-1]
-    operandStack.append(str(operand))
-    
+    operandStack.append(str(operand))   
 
     if operand == 'false' or operand == 'true':
         typesStack.append(Types.Bool)
@@ -417,7 +417,7 @@ def p_SEM_PUSH_CONSTANT(p):
         found = False
         try:
             value = int(operand)
-            print(value)
+            # print(value)
             typesStack.append(Types.Int)
             found = True
         except ValueError:
@@ -433,7 +433,7 @@ def p_SEM_PUSH_CONSTANT(p):
         
         if not found:
             typesStack.append(Types.String)
-    printStacks(operatorStack, operandStack, typesStack)
+    #printStacks(operatorStack, operandStack, typesStack)
     print(" ")
 
 def p_SEM_CREATE_ONEARG_QUAD(p):
@@ -445,10 +445,101 @@ def p_SEM_CREATE_ONEARG_QUAD(p):
     quad = generateOneArgQuadruple(operation, result)
     quadruples.append(quad)
     quadCounter = quadCounter + 1
+
+def p_SEM_RESOLVE_RELOP(p):
+    '''SEM_RESOLVE_RELOP : empty'''
+    global temporalCounter, quadCounter
+    top = operatorStack[-1:]
+    if top:
+        if top[0] == Operations.GreaterThan or top[0] == Operations.GreaterEqual or top[0] == Operations.LessThan or top[0] == Operations.LessEqual or top[0] == Operations.Equal or top[0] == Operations.NotEqual:
+            quad = generateQuad(operatorStack, operandStack, typesStack, temporalCounter, quadCounter)
+            quadruples.append(quad)
+            temporalCounter = temporalCounter + 1
+            quadCounter = quadCounter + 1
+
+def p_SEM_RESOLVE_ANDOR(p):
+    '''SEM_RESOLVE_ANDOR : empty'''
+    global temporalCounter, quadCounter
+    top = operatorStack[-1:]
+    if top:
+        if top[0] == Operations.And or top[0] == Operations.Or:
+            quad = generateQuad(operatorStack, operandStack, typesStack, temporalCounter, quadCounter)
+            quadruples.append(quad)
+            temporalCounter = temporalCounter + 1
+            quadCounter = quadCounter + 1
+
+def p_SEM_RESOLVE_NOT(p):
+    '''SEM_RESOLVE_NOT : empty'''
+    global temporalCounter, quadCounter
+    top = operatorStack[-1:]
+    if top:
+        if top[0] == Operations.Not:
+            operation = operatorStack.pop()
+            term1 = operandStack.pop()
+            type1 = typesStack.pop()
+            if type1 == Types.Bool:
+                temp = "t" + str(temporalCounter)
+                quad = buildQuad(operation, term1, Operations.Null, temp)
+                quadruples.append(quad)
+                operandStack.append(temp)
+                typesStack.append(Types.Bool)
+                quadCounter = quadCounter + 1
+                temporalCounter = temporalCounter + 1
+
+
+def p_SEM_GEN_GOTOF(p):
+    '''SEM_GEN_GOTOF : empty'''
+    global quadCounter
+    top = operandStack[-1:]
+    print("Exp:", top)
+    if top:
+        exp = operandStack.pop()
+        type1 = typesStack.pop()
+        if type1 != Types.Bool:
+            print("Expression not boolean")
+            exit(1)
+        else:
+            quad = buildQuad(Operations.GotoF, exp, Operations.Null, Operations.Null)
+            quadruples.append(quad)
+            jumpStack.append(quadCounter)
+            quadCounter = quadCounter + 1
+    print("Jumps: ", jumpStack)
+
+def p_SEM_GENANDFILL_GOTO(p):
+    '''SEM_GENANDFILL_GOTO : empty'''
+    global quadCounter
+    quad = buildQuad(Operations.Goto, Operations.Null, Operations.Null, Operations.Null)
+    quadruples.append(quad)
+    false = jumpStack.pop()
+    quadCounter = quadCounter + 1
+    jumpStack.append(quadCounter - 1)
+    fill(false, quadCounter, quadruples)
+    print("Jumps: ", jumpStack)
+
+def p_SEM_FILL_END(p):
+    '''SEM_FILL_END : empty'''
+    end = jumpStack.pop()
+    fill(end, quadCounter, quadruples)
+    print("Jumps: ", jumpStack)
+
+def p_SEM_PUSH_START(p):
+    '''SEM_PUSH_START : empty'''
+    jumpStack.append(quadCounter)
+
+def p_SEM_FILL_LOOP(p):
+    '''SEM_FILL_LOOP : empty'''
+    global quadCounter
+    end = jumpStack.pop()
+    ret = jumpStack.pop()
+    quad = buildQuad(Operations.Goto, Operations.Null, Operations.Null, ret)
+    quadruples.append(quad)
+    quadCounter = quadCounter + 1
+    fill(end, quadCounter, quadruples)
+
 # Building the parser with a test
 import ply.yacc as yacc
 
-filename = "test2.txt"
+filename = "test3.txt"
 
 parser = yacc.yacc()
 
@@ -462,6 +553,8 @@ def printTokens():
             if not tok:
                 break
             print(tok)
+
+# printTokens()
 
 # Parse
 with open(filename, 'r') as f:

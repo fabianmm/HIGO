@@ -4,7 +4,7 @@ from Cube import *
 
 def buildQuad(operator, term1, term2, result):
   quad = {'operation' : operator, 'term1' : term1, 'term2' : term2, 'result' : result}
-  # print(quad)
+  #print(quad)
   return quad
 
 def getOperationCode(operation):
@@ -18,8 +18,24 @@ def getOperationCode(operation):
     return Operations.Divide
   if operation == '=':
     return Operations.Assign
-  if operation == 'readto':
-    return Operations.Read
+  if operation == '>':
+    return Operations.GreaterThan
+  if operation == '<':
+    return Operations.LessThan
+  if operation == '>=':
+    return Operations.GreaterEqual
+  if operation == '<=':
+    return Operations.LessEqual
+  if operation == '==':
+    return Operations.Equal
+  if operation == '!=':
+    return Operations.NotEqual
+  if operation == 'and':
+    return Operations.And
+  if operation == 'or':
+    return Operations.Or
+  if operation == 'not':
+    return Operations.Not
   if operation == 'print':
     return Operations.Print
 
@@ -57,9 +73,12 @@ def generateQuad(operationStack, operandStack, typesStack, temporalCounter, quad
       typesStack.append(resultType)
       return quad
   else:
-      print("Error: Type mismatch {} and {}".format(getTypeFromCode(type1), getTypeFromCode(type2)))
+      print("Error: Type mismatch {} and {}, with {} and {}".format(getTypeFromCode(type1), getTypeFromCode(type2), term1, term2))
       exit(1)
 
 def generateOneArgQuadruple(operation, result):
   quad = {'operation' : operation, 'term1' : Operations.Null, 'term2' : Operations.Null, 'result' : result}
   return quad
+
+def fill(quadNumber, location, quadruples):
+  quadruples[quadNumber]['result'] = location

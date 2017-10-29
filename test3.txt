@@ -1,0 +1,28 @@
+var int A, B, C, D;
+var bool F;
+function void uno()
+{
+  if (A + B / D - A > C * D * A - B + D / A) {
+    A = B * B + C / D; 
+  }
+  else {
+    B = C * C;
+  }
+
+  while (not F) {
+      B = A + C;
+  }
+
+  if (A + B > C and B - D <= A) {
+    A = 1;
+  }
+}
+program test{
+  A = 1;
+  B = 2;
+  C = 3;
+  D = 4;
+  B = A + B + C - D * A * B + C;
+  uno();
+  print("hola");
+}

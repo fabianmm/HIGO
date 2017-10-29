@@ -1,0 +1,3718 @@
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> PROGRAM
+Rule 1     PROGRAM -> SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id BLOCK
+Rule 2     DECLARATIONS -> VARDEC DECLARATIONS
+Rule 3     DECLARATIONS -> LISTDEC DECLARATIONS
+Rule 4     DECLARATIONS -> empty
+Rule 5     VARDEC -> var TYPE VARIDS semicolon
+Rule 6     VARIDS -> id SEM_ADD_VAR
+Rule 7     VARIDS -> id SEM_ADD_VAR comma VARIDS
+Rule 8     LISTDEC -> list TYPE VARIDS semicolon
+Rule 9     TYPE -> int SEM_STORE_TYPE
+Rule 10    TYPE -> decimal SEM_STORE_TYPE
+Rule 11    TYPE -> bool SEM_STORE_TYPE
+Rule 12    FUNCTIONS -> FUNCTION FUNCTIONS
+Rule 13    FUNCTIONS -> empty
+Rule 14    FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+Rule 15    FUNCTYPE -> void SEM_STORE_TYPE
+Rule 16    FUNCTYPE -> TYPE
+Rule 17    FUNCPARAMETERS -> TYPE id
+Rule 18    FUNCPARAMETERS -> TYPE id comma FUNCPARAMETERS
+Rule 19    FUNCPARAMETERS -> empty
+Rule 20    BLOCK -> lk STATEMENTS rk
+Rule 21    STATEMENTS -> STATEMENT STATEMENTS
+Rule 22    STATEMENTS -> empty
+Rule 23    STATEMENT -> ASSIGN
+Rule 24    STATEMENT -> READ
+Rule 25    STATEMENT -> PRINT
+Rule 26    STATEMENT -> FUNCCALL
+Rule 27    STATEMENT -> CONDITION
+Rule 28    STATEMENT -> LOOP
+Rule 29    STATEMENT -> RETURN
+Rule 30    ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+Rule 31    LISTINDEX -> lb EXP rb LISTINDEX
+Rule 32    LISTINDEX -> empty
+Rule 33    READ -> readto lp id rp semicolon
+Rule 34    PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+Rule 35    FUNCCALL -> id lp CALLPARAMETERS rp semicolon
+Rule 36    CALLPARAMETERS -> EXPRESSION
+Rule 37    CALLPARAMETERS -> EXPRESSION comma CALLPARAMETERS
+Rule 38    CALLPARAMETERS -> empty
+Rule 39    CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+Rule 40    ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK
+Rule 41    ELSEBLOCK -> empty
+Rule 42    LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+Rule 43    RETURN -> return EXPRESSION semicolon
+Rule 44    EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT
+Rule 45    EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+Rule 46    EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+Rule 47    NOT -> not SEM_PUSH_OPERATOR
+Rule 48    NOT -> empty
+Rule 49    SUPEREXP -> EXP
+Rule 50    SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP
+Rule 51    RELOP -> gt SEM_PUSH_OPERATOR
+Rule 52    RELOP -> ge SEM_PUSH_OPERATOR
+Rule 53    RELOP -> lt SEM_PUSH_OPERATOR
+Rule 54    RELOP -> le SEM_PUSH_OPERATOR
+Rule 55    RELOP -> ee SEM_PUSH_OPERATOR
+Rule 56    RELOP -> ne SEM_PUSH_OPERATOR
+Rule 57    EXP -> TERM SEM_RESOLVE_PLUSMINUS
+Rule 58    EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+Rule 59    EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+Rule 60    TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE
+Rule 61    TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+Rule 62    TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+Rule 63    FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+Rule 64    FACTOR -> CONSTANT
+Rule 65    FACTOR -> plus CONSTANT
+Rule 66    FACTOR -> minus CONSTANT
+Rule 67    CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX
+Rule 68    CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+Rule 69    CONSTANT -> c_int SEM_PUSH_CONSTANT
+Rule 70    CONSTANT -> c_decimal SEM_PUSH_CONSTANT
+Rule 71    CONSTANT -> c_string SEM_PUSH_CONSTANT
+Rule 72    CONSTANT -> false SEM_PUSH_CONSTANT
+Rule 73    CONSTANT -> true SEM_PUSH_CONSTANT
+Rule 74    empty -> <empty>
+Rule 75    SEM_CODE_STARTS -> empty
+Rule 76    SEM_STORE_TYPE -> empty
+Rule 77    SEM_ADD_FUNC -> empty
+Rule 78    SEM_END_FUNC -> empty
+Rule 79    SEM_ADD_VAR -> empty
+Rule 80    SEM_PUSH_OPERAND -> empty
+Rule 81    SEM_PUSH_OPERATOR -> empty
+Rule 82    SEM_RESOLVE_PLUSMINUS -> empty
+Rule 83    SEM_RESOLVE_TIMESDIVIDE -> empty
+Rule 84    SEM_PUSH_PAREN -> empty
+Rule 85    SEM_POP_PAREN -> empty
+Rule 86    SEM_ASSIGN -> empty
+Rule 87    SEM_PUSH_CONSTANT -> empty
+Rule 88    SEM_CREATE_ONEARG_QUAD -> empty
+Rule 89    SEM_RESOLVE_RELOP -> empty
+Rule 90    SEM_RESOLVE_ANDOR -> empty
+Rule 91    SEM_RESOLVE_NOT -> empty
+Rule 92    SEM_GEN_GOTOF -> empty
+Rule 93    SEM_GENANDFILL_GOTO -> empty
+Rule 94    SEM_FILL_END -> empty
+Rule 95    SEM_PUSH_START -> empty
+Rule 96    SEM_FILL_LOOP -> empty
+
+Terminals, with rules where they appear
+
+and                  : 45
+bool                 : 11
+c_decimal            : 70
+c_int                : 69
+c_string             : 71
+comma                : 7 18 37
+decimal              : 10
+divide               : 62
+ee                   : 55
+else                 : 40
+equal                : 30
+error                : 
+false                : 72
+function             : 14
+ge                   : 52
+gt                   : 51
+id                   : 1 6 7 14 17 18 30 33 35 67 68
+if                   : 39
+int                  : 9
+lb                   : 31
+le                   : 54
+list                 : 8
+lk                   : 14 20
+lp                   : 14 33 34 35 39 42 63 68
+lt                   : 53
+minus                : 59 66
+ne                   : 56
+not                  : 47
+or                   : 46
+plus                 : 58 65
+print                : 34
+program              : 1
+rb                   : 31
+readto               : 33
+return               : 43
+rk                   : 14 20
+rp                   : 14 33 34 35 39 42 63 68
+semicolon            : 5 8 30 33 34 35 43
+times                : 61
+true                 : 73
+var                  : 5
+void                 : 15
+while                : 42
+
+Nonterminals, with rules where they appear
+
+ASSIGN               : 23
+BLOCK                : 1 39 40 42
+CALLPARAMETERS       : 35 37 68
+CONDITION            : 27
+CONSTANT             : 64 65 66
+DECLARATIONS         : 1 2 3 14
+ELSEBLOCK            : 39
+EXP                  : 31 49 50 50 58 59
+EXPRESSION           : 30 34 36 37 39 42 43 63
+FACTOR               : 60 61 62
+FUNCCALL             : 26
+FUNCPARAMETERS       : 14 18
+FUNCTION             : 12
+FUNCTIONS            : 1 12
+FUNCTYPE             : 14
+LISTDEC              : 3
+LISTINDEX            : 30 31 67
+LOOP                 : 28
+NOT                  : 44 45 45 46 46
+PRINT                : 25
+PROGRAM              : 0
+READ                 : 24
+RELOP                : 50
+RETURN               : 29
+SEM_ADD_FUNC         : 14
+SEM_ADD_VAR          : 6 7
+SEM_ASSIGN           : 30
+SEM_CODE_STARTS      : 1
+SEM_CREATE_ONEARG_QUAD : 34
+SEM_END_FUNC         : 14
+SEM_FILL_END         : 39
+SEM_FILL_LOOP        : 42
+SEM_GENANDFILL_GOTO  : 40
+SEM_GEN_GOTOF        : 39 42
+SEM_POP_PAREN        : 63
+SEM_PUSH_CONSTANT    : 69 70 71 72 73
+SEM_PUSH_OPERAND     : 30 67 68
+SEM_PUSH_OPERATOR    : 30 34 45 46 47 51 52 53 54 55 56 58 59 61 62
+SEM_PUSH_PAREN       : 63
+SEM_PUSH_START       : 42
+SEM_RESOLVE_ANDOR    : 45 46
+SEM_RESOLVE_NOT      : 44 45 45 46 46
+SEM_RESOLVE_PLUSMINUS : 57 58 59
+SEM_RESOLVE_RELOP    : 50
+SEM_RESOLVE_TIMESDIVIDE : 60 61 62
+SEM_STORE_TYPE       : 9 10 11 15
+STATEMENT            : 21
+STATEMENTS           : 14 20 21
+SUPEREXP             : 44 45 45 46 46
+TERM                 : 57 58 59 61 62
+TYPE                 : 5 8 16 17 18
+VARDEC               : 2
+VARIDS               : 5 7 8
+empty                : 4 13 19 22 32 38 41 48 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . PROGRAM
+    (1) PROGRAM -> . SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id BLOCK
+    (75) SEM_CODE_STARTS -> . empty
+    (74) empty -> .
+
+    var             reduce using rule 74 (empty -> .)
+    list            reduce using rule 74 (empty -> .)
+    function        reduce using rule 74 (empty -> .)
+    program         reduce using rule 74 (empty -> .)
+
+    PROGRAM                        shift and go to state 1
+    SEM_CODE_STARTS                shift and go to state 3
+    empty                          shift and go to state 2
+
+state 1
+
+    (0) S' -> PROGRAM .
+
+
+
+state 2
+
+    (75) SEM_CODE_STARTS -> empty .
+
+    var             reduce using rule 75 (SEM_CODE_STARTS -> empty .)
+    list            reduce using rule 75 (SEM_CODE_STARTS -> empty .)
+    function        reduce using rule 75 (SEM_CODE_STARTS -> empty .)
+    program         reduce using rule 75 (SEM_CODE_STARTS -> empty .)
+
+
+state 3
+
+    (1) PROGRAM -> SEM_CODE_STARTS . DECLARATIONS FUNCTIONS program id BLOCK
+    (2) DECLARATIONS -> . VARDEC DECLARATIONS
+    (3) DECLARATIONS -> . LISTDEC DECLARATIONS
+    (4) DECLARATIONS -> . empty
+    (5) VARDEC -> . var TYPE VARIDS semicolon
+    (8) LISTDEC -> . list TYPE VARIDS semicolon
+    (74) empty -> .
+
+    var             shift and go to state 9
+    list            shift and go to state 6
+    function        reduce using rule 74 (empty -> .)
+    program         reduce using rule 74 (empty -> .)
+
+    VARDEC                         shift and go to state 4
+    DECLARATIONS                   shift and go to state 5
+    empty                          shift and go to state 7
+    LISTDEC                        shift and go to state 8
+
+state 4
+
+    (2) DECLARATIONS -> VARDEC . DECLARATIONS
+    (2) DECLARATIONS -> . VARDEC DECLARATIONS
+    (3) DECLARATIONS -> . LISTDEC DECLARATIONS
+    (4) DECLARATIONS -> . empty
+    (5) VARDEC -> . var TYPE VARIDS semicolon
+    (8) LISTDEC -> . list TYPE VARIDS semicolon
+    (74) empty -> .
+
+    var             shift and go to state 9
+    list            shift and go to state 6
+    function        reduce using rule 74 (empty -> .)
+    program         reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    readto          reduce using rule 74 (empty -> .)
+    print           reduce using rule 74 (empty -> .)
+    if              reduce using rule 74 (empty -> .)
+    while           reduce using rule 74 (empty -> .)
+    return          reduce using rule 74 (empty -> .)
+    rk              reduce using rule 74 (empty -> .)
+
+    VARDEC                         shift and go to state 4
+    DECLARATIONS                   shift and go to state 10
+    LISTDEC                        shift and go to state 8
+    empty                          shift and go to state 7
+
+state 5
+
+    (1) PROGRAM -> SEM_CODE_STARTS DECLARATIONS . FUNCTIONS program id BLOCK
+    (12) FUNCTIONS -> . FUNCTION FUNCTIONS
+    (13) FUNCTIONS -> . empty
+    (14) FUNCTION -> . function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+    (74) empty -> .
+
+    function        shift and go to state 12
+    program         reduce using rule 74 (empty -> .)
+
+    FUNCTION                       shift and go to state 11
+    FUNCTIONS                      shift and go to state 13
+    empty                          shift and go to state 14
+
+state 6
+
+    (8) LISTDEC -> list . TYPE VARIDS semicolon
+    (9) TYPE -> . int SEM_STORE_TYPE
+    (10) TYPE -> . decimal SEM_STORE_TYPE
+    (11) TYPE -> . bool SEM_STORE_TYPE
+
+    int             shift and go to state 15
+    decimal         shift and go to state 16
+    bool            shift and go to state 17
+
+    TYPE                           shift and go to state 18
+
+state 7
+
+    (4) DECLARATIONS -> empty .
+
+    function        reduce using rule 4 (DECLARATIONS -> empty .)
+    program         reduce using rule 4 (DECLARATIONS -> empty .)
+    id              reduce using rule 4 (DECLARATIONS -> empty .)
+    readto          reduce using rule 4 (DECLARATIONS -> empty .)
+    print           reduce using rule 4 (DECLARATIONS -> empty .)
+    if              reduce using rule 4 (DECLARATIONS -> empty .)
+    while           reduce using rule 4 (DECLARATIONS -> empty .)
+    return          reduce using rule 4 (DECLARATIONS -> empty .)
+    rk              reduce using rule 4 (DECLARATIONS -> empty .)
+
+
+state 8
+
+    (3) DECLARATIONS -> LISTDEC . DECLARATIONS
+    (2) DECLARATIONS -> . VARDEC DECLARATIONS
+    (3) DECLARATIONS -> . LISTDEC DECLARATIONS
+    (4) DECLARATIONS -> . empty
+    (5) VARDEC -> . var TYPE VARIDS semicolon
+    (8) LISTDEC -> . list TYPE VARIDS semicolon
+    (74) empty -> .
+
+    var             shift and go to state 9
+    list            shift and go to state 6
+    function        reduce using rule 74 (empty -> .)
+    program         reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    readto          reduce using rule 74 (empty -> .)
+    print           reduce using rule 74 (empty -> .)
+    if              reduce using rule 74 (empty -> .)
+    while           reduce using rule 74 (empty -> .)
+    return          reduce using rule 74 (empty -> .)
+    rk              reduce using rule 74 (empty -> .)
+
+    VARDEC                         shift and go to state 4
+    DECLARATIONS                   shift and go to state 19
+    LISTDEC                        shift and go to state 8
+    empty                          shift and go to state 7
+
+state 9
+
+    (5) VARDEC -> var . TYPE VARIDS semicolon
+    (9) TYPE -> . int SEM_STORE_TYPE
+    (10) TYPE -> . decimal SEM_STORE_TYPE
+    (11) TYPE -> . bool SEM_STORE_TYPE
+
+    int             shift and go to state 15
+    decimal         shift and go to state 16
+    bool            shift and go to state 17
+
+    TYPE                           shift and go to state 20
+
+state 10
+
+    (2) DECLARATIONS -> VARDEC DECLARATIONS .
+
+    function        reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    program         reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    id              reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    readto          reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    print           reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    if              reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    while           reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    return          reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+    rk              reduce using rule 2 (DECLARATIONS -> VARDEC DECLARATIONS .)
+
+
+state 11
+
+    (12) FUNCTIONS -> FUNCTION . FUNCTIONS
+    (12) FUNCTIONS -> . FUNCTION FUNCTIONS
+    (13) FUNCTIONS -> . empty
+    (14) FUNCTION -> . function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+    (74) empty -> .
+
+    function        shift and go to state 12
+    program         reduce using rule 74 (empty -> .)
+
+    FUNCTION                       shift and go to state 11
+    FUNCTIONS                      shift and go to state 21
+    empty                          shift and go to state 14
+
+state 12
+
+    (14) FUNCTION -> function . FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+    (15) FUNCTYPE -> . void SEM_STORE_TYPE
+    (16) FUNCTYPE -> . TYPE
+    (9) TYPE -> . int SEM_STORE_TYPE
+    (10) TYPE -> . decimal SEM_STORE_TYPE
+    (11) TYPE -> . bool SEM_STORE_TYPE
+
+    void            shift and go to state 24
+    int             shift and go to state 15
+    decimal         shift and go to state 16
+    bool            shift and go to state 17
+
+    FUNCTYPE                       shift and go to state 23
+    TYPE                           shift and go to state 22
+
+state 13
+
+    (1) PROGRAM -> SEM_CODE_STARTS DECLARATIONS FUNCTIONS . program id BLOCK
+
+    program         shift and go to state 25
+
+
+state 14
+
+    (13) FUNCTIONS -> empty .
+
+    program         reduce using rule 13 (FUNCTIONS -> empty .)
+
+
+state 15
+
+    (9) TYPE -> int . SEM_STORE_TYPE
+    (76) SEM_STORE_TYPE -> . empty
+    (74) empty -> .
+
+    id              reduce using rule 74 (empty -> .)
+
+    SEM_STORE_TYPE                 shift and go to state 26
+    empty                          shift and go to state 27
+
+state 16
+
+    (10) TYPE -> decimal . SEM_STORE_TYPE
+    (76) SEM_STORE_TYPE -> . empty
+    (74) empty -> .
+
+    id              reduce using rule 74 (empty -> .)
+
+    SEM_STORE_TYPE                 shift and go to state 28
+    empty                          shift and go to state 27
+
+state 17
+
+    (11) TYPE -> bool . SEM_STORE_TYPE
+    (76) SEM_STORE_TYPE -> . empty
+    (74) empty -> .
+
+    id              reduce using rule 74 (empty -> .)
+
+    SEM_STORE_TYPE                 shift and go to state 29
+    empty                          shift and go to state 27
+
+state 18
+
+    (8) LISTDEC -> list TYPE . VARIDS semicolon
+    (6) VARIDS -> . id SEM_ADD_VAR
+    (7) VARIDS -> . id SEM_ADD_VAR comma VARIDS
+
+    id              shift and go to state 31
+
+    VARIDS                         shift and go to state 30
+
+state 19
+
+    (3) DECLARATIONS -> LISTDEC DECLARATIONS .
+
+    function        reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    program         reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    id              reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    readto          reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    print           reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    if              reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    while           reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    return          reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+    rk              reduce using rule 3 (DECLARATIONS -> LISTDEC DECLARATIONS .)
+
+
+state 20
+
+    (5) VARDEC -> var TYPE . VARIDS semicolon
+    (6) VARIDS -> . id SEM_ADD_VAR
+    (7) VARIDS -> . id SEM_ADD_VAR comma VARIDS
+
+    id              shift and go to state 31
+
+    VARIDS                         shift and go to state 32
+
+state 21
+
+    (12) FUNCTIONS -> FUNCTION FUNCTIONS .
+
+    program         reduce using rule 12 (FUNCTIONS -> FUNCTION FUNCTIONS .)
+
+
+state 22
+
+    (16) FUNCTYPE -> TYPE .
+
+    id              reduce using rule 16 (FUNCTYPE -> TYPE .)
+
+
+state 23
+
+    (14) FUNCTION -> function FUNCTYPE . id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+
+    id              shift and go to state 33
+
+
+state 24
+
+    (15) FUNCTYPE -> void . SEM_STORE_TYPE
+    (76) SEM_STORE_TYPE -> . empty
+    (74) empty -> .
+
+    id              reduce using rule 74 (empty -> .)
+
+    SEM_STORE_TYPE                 shift and go to state 34
+    empty                          shift and go to state 27
+
+state 25
+
+    (1) PROGRAM -> SEM_CODE_STARTS DECLARATIONS FUNCTIONS program . id BLOCK
+
+    id              shift and go to state 35
+
+
+state 26
+
+    (9) TYPE -> int SEM_STORE_TYPE .
+
+    id              reduce using rule 9 (TYPE -> int SEM_STORE_TYPE .)
+
+
+state 27
+
+    (76) SEM_STORE_TYPE -> empty .
+
+    id              reduce using rule 76 (SEM_STORE_TYPE -> empty .)
+
+
+state 28
+
+    (10) TYPE -> decimal SEM_STORE_TYPE .
+
+    id              reduce using rule 10 (TYPE -> decimal SEM_STORE_TYPE .)
+
+
+state 29
+
+    (11) TYPE -> bool SEM_STORE_TYPE .
+
+    id              reduce using rule 11 (TYPE -> bool SEM_STORE_TYPE .)
+
+
+state 30
+
+    (8) LISTDEC -> list TYPE VARIDS . semicolon
+
+    semicolon       shift and go to state 36
+
+
+state 31
+
+    (6) VARIDS -> id . SEM_ADD_VAR
+    (7) VARIDS -> id . SEM_ADD_VAR comma VARIDS
+    (79) SEM_ADD_VAR -> . empty
+    (74) empty -> .
+
+    comma           reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+
+    SEM_ADD_VAR                    shift and go to state 37
+    empty                          shift and go to state 38
+
+state 32
+
+    (5) VARDEC -> var TYPE VARIDS . semicolon
+
+    semicolon       shift and go to state 39
+
+
+state 33
+
+    (14) FUNCTION -> function FUNCTYPE id . SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+    (77) SEM_ADD_FUNC -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+
+    SEM_ADD_FUNC                   shift and go to state 40
+    empty                          shift and go to state 41
+
+state 34
+
+    (15) FUNCTYPE -> void SEM_STORE_TYPE .
+
+    id              reduce using rule 15 (FUNCTYPE -> void SEM_STORE_TYPE .)
+
+
+state 35
+
+    (1) PROGRAM -> SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id . BLOCK
+    (20) BLOCK -> . lk STATEMENTS rk
+
+    lk              shift and go to state 42
+
+    BLOCK                          shift and go to state 43
+
+state 36
+
+    (8) LISTDEC -> list TYPE VARIDS semicolon .
+
+    var             reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    list            reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    function        reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    program         reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    id              reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    readto          reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    print           reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    if              reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    while           reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    return          reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+    rk              reduce using rule 8 (LISTDEC -> list TYPE VARIDS semicolon .)
+
+
+state 37
+
+    (6) VARIDS -> id SEM_ADD_VAR .
+    (7) VARIDS -> id SEM_ADD_VAR . comma VARIDS
+
+    semicolon       reduce using rule 6 (VARIDS -> id SEM_ADD_VAR .)
+    comma           shift and go to state 44
+
+
+state 38
+
+    (79) SEM_ADD_VAR -> empty .
+
+    comma           reduce using rule 79 (SEM_ADD_VAR -> empty .)
+    semicolon       reduce using rule 79 (SEM_ADD_VAR -> empty .)
+
+
+state 39
+
+    (5) VARDEC -> var TYPE VARIDS semicolon .
+
+    var             reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    list            reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    id              reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    readto          reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    print           reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    if              reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    while           reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    return          reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    rk              reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    function        reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+    program         reduce using rule 5 (VARDEC -> var TYPE VARIDS semicolon .)
+
+
+state 40
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC . lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+
+    lp              shift and go to state 45
+
+
+state 41
+
+    (77) SEM_ADD_FUNC -> empty .
+
+    lp              reduce using rule 77 (SEM_ADD_FUNC -> empty .)
+
+
+state 42
+
+    (20) BLOCK -> lk . STATEMENTS rk
+    (21) STATEMENTS -> . STATEMENT STATEMENTS
+    (22) STATEMENTS -> . empty
+    (23) STATEMENT -> . ASSIGN
+    (24) STATEMENT -> . READ
+    (25) STATEMENT -> . PRINT
+    (26) STATEMENT -> . FUNCCALL
+    (27) STATEMENT -> . CONDITION
+    (28) STATEMENT -> . LOOP
+    (29) STATEMENT -> . RETURN
+    (74) empty -> .
+    (30) ASSIGN -> . id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+    (33) READ -> . readto lp id rp semicolon
+    (34) PRINT -> . print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+    (35) FUNCCALL -> . id lp CALLPARAMETERS rp semicolon
+    (39) CONDITION -> . if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+    (42) LOOP -> . while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+    (43) RETURN -> . return EXPRESSION semicolon
+
+    rk              reduce using rule 74 (empty -> .)
+    id              shift and go to state 52
+    readto          shift and go to state 49
+    print           shift and go to state 55
+    if              shift and go to state 53
+    while           shift and go to state 48
+    return          shift and go to state 58
+
+    STATEMENTS                     shift and go to state 46
+    FUNCCALL                       shift and go to state 54
+    READ                           shift and go to state 47
+    PRINT                          shift and go to state 50
+    RETURN                         shift and go to state 51
+    ASSIGN                         shift and go to state 56
+    CONDITION                      shift and go to state 57
+    STATEMENT                      shift and go to state 59
+    empty                          shift and go to state 60
+    LOOP                           shift and go to state 61
+
+state 43
+
+    (1) PROGRAM -> SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id BLOCK .
+
+    $end            reduce using rule 1 (PROGRAM -> SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id BLOCK .)
+
+
+state 44
+
+    (7) VARIDS -> id SEM_ADD_VAR comma . VARIDS
+    (6) VARIDS -> . id SEM_ADD_VAR
+    (7) VARIDS -> . id SEM_ADD_VAR comma VARIDS
+
+    id              shift and go to state 31
+
+    VARIDS                         shift and go to state 62
+
+state 45
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp . FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+    (17) FUNCPARAMETERS -> . TYPE id
+    (18) FUNCPARAMETERS -> . TYPE id comma FUNCPARAMETERS
+    (19) FUNCPARAMETERS -> . empty
+    (9) TYPE -> . int SEM_STORE_TYPE
+    (10) TYPE -> . decimal SEM_STORE_TYPE
+    (11) TYPE -> . bool SEM_STORE_TYPE
+    (74) empty -> .
+
+    int             shift and go to state 15
+    decimal         shift and go to state 16
+    bool            shift and go to state 17
+    rp              reduce using rule 74 (empty -> .)
+
+    TYPE                           shift and go to state 63
+    FUNCPARAMETERS                 shift and go to state 64
+    empty                          shift and go to state 65
+
+state 46
+
+    (20) BLOCK -> lk STATEMENTS . rk
+
+    rk              shift and go to state 66
+
+
+state 47
+
+    (24) STATEMENT -> READ .
+
+    id              reduce using rule 24 (STATEMENT -> READ .)
+    readto          reduce using rule 24 (STATEMENT -> READ .)
+    print           reduce using rule 24 (STATEMENT -> READ .)
+    if              reduce using rule 24 (STATEMENT -> READ .)
+    while           reduce using rule 24 (STATEMENT -> READ .)
+    return          reduce using rule 24 (STATEMENT -> READ .)
+    rk              reduce using rule 24 (STATEMENT -> READ .)
+
+
+state 48
+
+    (42) LOOP -> while . SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+    (95) SEM_PUSH_START -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+
+    SEM_PUSH_START                 shift and go to state 68
+    empty                          shift and go to state 67
+
+state 49
+
+    (33) READ -> readto . lp id rp semicolon
+
+    lp              shift and go to state 69
+
+
+state 50
+
+    (25) STATEMENT -> PRINT .
+
+    id              reduce using rule 25 (STATEMENT -> PRINT .)
+    readto          reduce using rule 25 (STATEMENT -> PRINT .)
+    print           reduce using rule 25 (STATEMENT -> PRINT .)
+    if              reduce using rule 25 (STATEMENT -> PRINT .)
+    while           reduce using rule 25 (STATEMENT -> PRINT .)
+    return          reduce using rule 25 (STATEMENT -> PRINT .)
+    rk              reduce using rule 25 (STATEMENT -> PRINT .)
+
+
+state 51
+
+    (29) STATEMENT -> RETURN .
+
+    id              reduce using rule 29 (STATEMENT -> RETURN .)
+    readto          reduce using rule 29 (STATEMENT -> RETURN .)
+    print           reduce using rule 29 (STATEMENT -> RETURN .)
+    if              reduce using rule 29 (STATEMENT -> RETURN .)
+    while           reduce using rule 29 (STATEMENT -> RETURN .)
+    return          reduce using rule 29 (STATEMENT -> RETURN .)
+    rk              reduce using rule 29 (STATEMENT -> RETURN .)
+
+
+state 52
+
+    (30) ASSIGN -> id . SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+    (35) FUNCCALL -> id . lp CALLPARAMETERS rp semicolon
+    (80) SEM_PUSH_OPERAND -> . empty
+    (74) empty -> .
+
+    lp              shift and go to state 72
+    lb              reduce using rule 74 (empty -> .)
+    equal           reduce using rule 74 (empty -> .)
+
+    SEM_PUSH_OPERAND               shift and go to state 70
+    empty                          shift and go to state 71
+
+state 53
+
+    (39) CONDITION -> if . lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+
+    lp              shift and go to state 73
+
+
+state 54
+
+    (26) STATEMENT -> FUNCCALL .
+
+    id              reduce using rule 26 (STATEMENT -> FUNCCALL .)
+    readto          reduce using rule 26 (STATEMENT -> FUNCCALL .)
+    print           reduce using rule 26 (STATEMENT -> FUNCCALL .)
+    if              reduce using rule 26 (STATEMENT -> FUNCCALL .)
+    while           reduce using rule 26 (STATEMENT -> FUNCCALL .)
+    return          reduce using rule 26 (STATEMENT -> FUNCCALL .)
+    rk              reduce using rule 26 (STATEMENT -> FUNCCALL .)
+
+
+state 55
+
+    (34) PRINT -> print . SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 75
+
+state 56
+
+    (23) STATEMENT -> ASSIGN .
+
+    id              reduce using rule 23 (STATEMENT -> ASSIGN .)
+    readto          reduce using rule 23 (STATEMENT -> ASSIGN .)
+    print           reduce using rule 23 (STATEMENT -> ASSIGN .)
+    if              reduce using rule 23 (STATEMENT -> ASSIGN .)
+    while           reduce using rule 23 (STATEMENT -> ASSIGN .)
+    return          reduce using rule 23 (STATEMENT -> ASSIGN .)
+    rk              reduce using rule 23 (STATEMENT -> ASSIGN .)
+
+
+state 57
+
+    (27) STATEMENT -> CONDITION .
+
+    id              reduce using rule 27 (STATEMENT -> CONDITION .)
+    readto          reduce using rule 27 (STATEMENT -> CONDITION .)
+    print           reduce using rule 27 (STATEMENT -> CONDITION .)
+    if              reduce using rule 27 (STATEMENT -> CONDITION .)
+    while           reduce using rule 27 (STATEMENT -> CONDITION .)
+    return          reduce using rule 27 (STATEMENT -> CONDITION .)
+    rk              reduce using rule 27 (STATEMENT -> CONDITION .)
+
+
+state 58
+
+    (43) RETURN -> return . EXPRESSION semicolon
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 77
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 79
+
+state 59
+
+    (21) STATEMENTS -> STATEMENT . STATEMENTS
+    (21) STATEMENTS -> . STATEMENT STATEMENTS
+    (22) STATEMENTS -> . empty
+    (23) STATEMENT -> . ASSIGN
+    (24) STATEMENT -> . READ
+    (25) STATEMENT -> . PRINT
+    (26) STATEMENT -> . FUNCCALL
+    (27) STATEMENT -> . CONDITION
+    (28) STATEMENT -> . LOOP
+    (29) STATEMENT -> . RETURN
+    (74) empty -> .
+    (30) ASSIGN -> . id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+    (33) READ -> . readto lp id rp semicolon
+    (34) PRINT -> . print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+    (35) FUNCCALL -> . id lp CALLPARAMETERS rp semicolon
+    (39) CONDITION -> . if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+    (42) LOOP -> . while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+    (43) RETURN -> . return EXPRESSION semicolon
+
+    rk              reduce using rule 74 (empty -> .)
+    id              shift and go to state 52
+    readto          shift and go to state 49
+    print           shift and go to state 55
+    if              shift and go to state 53
+    while           shift and go to state 48
+    return          shift and go to state 58
+
+    STATEMENTS                     shift and go to state 80
+    FUNCCALL                       shift and go to state 54
+    READ                           shift and go to state 47
+    PRINT                          shift and go to state 50
+    RETURN                         shift and go to state 51
+    ASSIGN                         shift and go to state 56
+    CONDITION                      shift and go to state 57
+    STATEMENT                      shift and go to state 59
+    empty                          shift and go to state 60
+    LOOP                           shift and go to state 61
+
+state 60
+
+    (22) STATEMENTS -> empty .
+
+    rk              reduce using rule 22 (STATEMENTS -> empty .)
+
+
+state 61
+
+    (28) STATEMENT -> LOOP .
+
+    id              reduce using rule 28 (STATEMENT -> LOOP .)
+    readto          reduce using rule 28 (STATEMENT -> LOOP .)
+    print           reduce using rule 28 (STATEMENT -> LOOP .)
+    if              reduce using rule 28 (STATEMENT -> LOOP .)
+    while           reduce using rule 28 (STATEMENT -> LOOP .)
+    return          reduce using rule 28 (STATEMENT -> LOOP .)
+    rk              reduce using rule 28 (STATEMENT -> LOOP .)
+
+
+state 62
+
+    (7) VARIDS -> id SEM_ADD_VAR comma VARIDS .
+
+    semicolon       reduce using rule 7 (VARIDS -> id SEM_ADD_VAR comma VARIDS .)
+
+
+state 63
+
+    (17) FUNCPARAMETERS -> TYPE . id
+    (18) FUNCPARAMETERS -> TYPE . id comma FUNCPARAMETERS
+
+    id              shift and go to state 81
+
+
+state 64
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS . rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+
+    rp              shift and go to state 82
+
+
+state 65
+
+    (19) FUNCPARAMETERS -> empty .
+
+    rp              reduce using rule 19 (FUNCPARAMETERS -> empty .)
+
+
+state 66
+
+    (20) BLOCK -> lk STATEMENTS rk .
+
+    id              reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    readto          reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    print           reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    if              reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    while           reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    return          reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    rk              reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    $end            reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+    else            reduce using rule 20 (BLOCK -> lk STATEMENTS rk .)
+
+
+state 67
+
+    (95) SEM_PUSH_START -> empty .
+
+    lp              reduce using rule 95 (SEM_PUSH_START -> empty .)
+
+
+state 68
+
+    (42) LOOP -> while SEM_PUSH_START . lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+
+    lp              shift and go to state 83
+
+
+state 69
+
+    (33) READ -> readto lp . id rp semicolon
+
+    id              shift and go to state 84
+
+
+state 70
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND . LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+    (31) LISTINDEX -> . lb EXP rb LISTINDEX
+    (32) LISTINDEX -> . empty
+    (74) empty -> .
+
+    lb              shift and go to state 85
+    equal           reduce using rule 74 (empty -> .)
+
+    LISTINDEX                      shift and go to state 86
+    empty                          shift and go to state 87
+
+state 71
+
+    (80) SEM_PUSH_OPERAND -> empty .
+
+    lb              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    equal           reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    lp              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    times           reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    divide          reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    plus            reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    minus           reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    gt              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    ge              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    lt              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    le              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    ee              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    ne              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    and             reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    or              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    semicolon       reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    comma           reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    rp              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+    rb              reduce using rule 80 (SEM_PUSH_OPERAND -> empty .)
+
+
+state 72
+
+    (35) FUNCCALL -> id lp . CALLPARAMETERS rp semicolon
+    (36) CALLPARAMETERS -> . EXPRESSION
+    (37) CALLPARAMETERS -> . EXPRESSION comma CALLPARAMETERS
+    (38) CALLPARAMETERS -> . empty
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (74) empty -> .
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+
+    rp              reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+    not             shift and go to state 76
+
+    CALLPARAMETERS                 shift and go to state 88
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 89
+    empty                          shift and go to state 90
+
+state 73
+
+    (39) CONDITION -> if lp . EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 77
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 91
+
+state 74
+
+    (81) SEM_PUSH_OPERATOR -> empty .
+
+    lp              reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    plus            reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    minus           reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    id              reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    c_int           reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    c_decimal       reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    c_string        reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    false           reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    true            reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+    not             reduce using rule 81 (SEM_PUSH_OPERATOR -> empty .)
+
+
+state 75
+
+    (34) PRINT -> print SEM_PUSH_OPERATOR . lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+
+    lp              shift and go to state 92
+
+
+state 76
+
+    (47) NOT -> not . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 93
+
+state 77
+
+    (48) NOT -> empty .
+
+    lp              reduce using rule 48 (NOT -> empty .)
+    plus            reduce using rule 48 (NOT -> empty .)
+    minus           reduce using rule 48 (NOT -> empty .)
+    id              reduce using rule 48 (NOT -> empty .)
+    c_int           reduce using rule 48 (NOT -> empty .)
+    c_decimal       reduce using rule 48 (NOT -> empty .)
+    c_string        reduce using rule 48 (NOT -> empty .)
+    false           reduce using rule 48 (NOT -> empty .)
+    true            reduce using rule 48 (NOT -> empty .)
+
+
+state 78
+
+    (44) EXPRESSION -> NOT . SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> NOT . SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> NOT . SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (49) SUPEREXP -> . EXP
+    (50) SUPEREXP -> . EXP RELOP EXP SEM_RESOLVE_RELOP
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    SUPEREXP                       shift and go to state 104
+    EXP                            shift and go to state 95
+    FACTOR                         shift and go to state 106
+
+state 79
+
+    (43) RETURN -> return EXPRESSION . semicolon
+
+    semicolon       shift and go to state 108
+
+
+state 80
+
+    (21) STATEMENTS -> STATEMENT STATEMENTS .
+
+    rk              reduce using rule 21 (STATEMENTS -> STATEMENT STATEMENTS .)
+
+
+state 81
+
+    (17) FUNCPARAMETERS -> TYPE id .
+    (18) FUNCPARAMETERS -> TYPE id . comma FUNCPARAMETERS
+
+    rp              reduce using rule 17 (FUNCPARAMETERS -> TYPE id .)
+    comma           shift and go to state 109
+
+
+state 82
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp . lk DECLARATIONS STATEMENTS rk SEM_END_FUNC
+
+    lk              shift and go to state 110
+
+
+state 83
+
+    (42) LOOP -> while SEM_PUSH_START lp . EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 77
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 111
+
+state 84
+
+    (33) READ -> readto lp id . rp semicolon
+
+    rp              shift and go to state 112
+
+
+state 85
+
+    (31) LISTINDEX -> lb . EXP rb LISTINDEX
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    EXP                            shift and go to state 113
+    FACTOR                         shift and go to state 106
+
+state 86
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX . equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+
+    equal           shift and go to state 114
+
+
+state 87
+
+    (32) LISTINDEX -> empty .
+
+    equal           reduce using rule 32 (LISTINDEX -> empty .)
+    times           reduce using rule 32 (LISTINDEX -> empty .)
+    divide          reduce using rule 32 (LISTINDEX -> empty .)
+    plus            reduce using rule 32 (LISTINDEX -> empty .)
+    minus           reduce using rule 32 (LISTINDEX -> empty .)
+    gt              reduce using rule 32 (LISTINDEX -> empty .)
+    ge              reduce using rule 32 (LISTINDEX -> empty .)
+    lt              reduce using rule 32 (LISTINDEX -> empty .)
+    le              reduce using rule 32 (LISTINDEX -> empty .)
+    ee              reduce using rule 32 (LISTINDEX -> empty .)
+    ne              reduce using rule 32 (LISTINDEX -> empty .)
+    and             reduce using rule 32 (LISTINDEX -> empty .)
+    or              reduce using rule 32 (LISTINDEX -> empty .)
+    semicolon       reduce using rule 32 (LISTINDEX -> empty .)
+    comma           reduce using rule 32 (LISTINDEX -> empty .)
+    rp              reduce using rule 32 (LISTINDEX -> empty .)
+    rb              reduce using rule 32 (LISTINDEX -> empty .)
+
+
+state 88
+
+    (35) FUNCCALL -> id lp CALLPARAMETERS . rp semicolon
+
+    rp              shift and go to state 115
+
+
+state 89
+
+    (36) CALLPARAMETERS -> EXPRESSION .
+    (37) CALLPARAMETERS -> EXPRESSION . comma CALLPARAMETERS
+
+    rp              reduce using rule 36 (CALLPARAMETERS -> EXPRESSION .)
+    comma           shift and go to state 116
+
+
+state 90
+
+    (38) CALLPARAMETERS -> empty .
+    (48) NOT -> empty .
+
+    rp              reduce using rule 38 (CALLPARAMETERS -> empty .)
+    lp              reduce using rule 48 (NOT -> empty .)
+    plus            reduce using rule 48 (NOT -> empty .)
+    minus           reduce using rule 48 (NOT -> empty .)
+    id              reduce using rule 48 (NOT -> empty .)
+    c_int           reduce using rule 48 (NOT -> empty .)
+    c_decimal       reduce using rule 48 (NOT -> empty .)
+    c_string        reduce using rule 48 (NOT -> empty .)
+    false           reduce using rule 48 (NOT -> empty .)
+    true            reduce using rule 48 (NOT -> empty .)
+
+
+state 91
+
+    (39) CONDITION -> if lp EXPRESSION . rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+
+    rp              shift and go to state 117
+
+
+state 92
+
+    (34) PRINT -> print SEM_PUSH_OPERATOR lp . EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 77
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 118
+
+state 93
+
+    (47) NOT -> not SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    id              reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    false           reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+    true            reduce using rule 47 (NOT -> not SEM_PUSH_OPERATOR .)
+
+
+state 94
+
+    (64) FACTOR -> CONSTANT .
+
+    times           reduce using rule 64 (FACTOR -> CONSTANT .)
+    divide          reduce using rule 64 (FACTOR -> CONSTANT .)
+    plus            reduce using rule 64 (FACTOR -> CONSTANT .)
+    minus           reduce using rule 64 (FACTOR -> CONSTANT .)
+    gt              reduce using rule 64 (FACTOR -> CONSTANT .)
+    ge              reduce using rule 64 (FACTOR -> CONSTANT .)
+    lt              reduce using rule 64 (FACTOR -> CONSTANT .)
+    le              reduce using rule 64 (FACTOR -> CONSTANT .)
+    ee              reduce using rule 64 (FACTOR -> CONSTANT .)
+    ne              reduce using rule 64 (FACTOR -> CONSTANT .)
+    and             reduce using rule 64 (FACTOR -> CONSTANT .)
+    or              reduce using rule 64 (FACTOR -> CONSTANT .)
+    semicolon       reduce using rule 64 (FACTOR -> CONSTANT .)
+    comma           reduce using rule 64 (FACTOR -> CONSTANT .)
+    rp              reduce using rule 64 (FACTOR -> CONSTANT .)
+    rb              reduce using rule 64 (FACTOR -> CONSTANT .)
+
+
+state 95
+
+    (49) SUPEREXP -> EXP .
+    (50) SUPEREXP -> EXP . RELOP EXP SEM_RESOLVE_RELOP
+    (51) RELOP -> . gt SEM_PUSH_OPERATOR
+    (52) RELOP -> . ge SEM_PUSH_OPERATOR
+    (53) RELOP -> . lt SEM_PUSH_OPERATOR
+    (54) RELOP -> . le SEM_PUSH_OPERATOR
+    (55) RELOP -> . ee SEM_PUSH_OPERATOR
+    (56) RELOP -> . ne SEM_PUSH_OPERATOR
+
+    semicolon       reduce using rule 49 (SUPEREXP -> EXP .)
+    comma           reduce using rule 49 (SUPEREXP -> EXP .)
+    rp              reduce using rule 49 (SUPEREXP -> EXP .)
+    and             reduce using rule 49 (SUPEREXP -> EXP .)
+    or              reduce using rule 49 (SUPEREXP -> EXP .)
+    gt              shift and go to state 119
+    ge              shift and go to state 124
+    lt              shift and go to state 122
+    le              shift and go to state 125
+    ee              shift and go to state 121
+    ne              shift and go to state 123
+
+    RELOP                          shift and go to state 120
+
+state 96
+
+    (72) CONSTANT -> false . SEM_PUSH_CONSTANT
+    (87) SEM_PUSH_CONSTANT -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 126
+    SEM_PUSH_CONSTANT              shift and go to state 127
+
+state 97
+
+    (67) CONSTANT -> id . SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> id . SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (80) SEM_PUSH_OPERAND -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    lb              reduce using rule 74 (empty -> .)
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    SEM_PUSH_OPERAND               shift and go to state 128
+    empty                          shift and go to state 71
+
+state 98
+
+    (57) EXP -> TERM . SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> TERM . SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> TERM . SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (82) SEM_RESOLVE_PLUSMINUS -> . empty
+    (74) empty -> .
+
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_PLUSMINUS          shift and go to state 129
+    empty                          shift and go to state 130
+
+state 99
+
+    (73) CONSTANT -> true . SEM_PUSH_CONSTANT
+    (87) SEM_PUSH_CONSTANT -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 126
+    SEM_PUSH_CONSTANT              shift and go to state 131
+
+state 100
+
+    (63) FACTOR -> lp . SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (84) SEM_PUSH_PAREN -> . empty
+    (74) empty -> .
+
+    not             reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 133
+    SEM_PUSH_PAREN                 shift and go to state 132
+
+state 101
+
+    (71) CONSTANT -> c_string . SEM_PUSH_CONSTANT
+    (87) SEM_PUSH_CONSTANT -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 126
+    SEM_PUSH_CONSTANT              shift and go to state 134
+
+state 102
+
+    (69) CONSTANT -> c_int . SEM_PUSH_CONSTANT
+    (87) SEM_PUSH_CONSTANT -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 126
+    SEM_PUSH_CONSTANT              shift and go to state 135
+
+state 103
+
+    (70) CONSTANT -> c_decimal . SEM_PUSH_CONSTANT
+    (87) SEM_PUSH_CONSTANT -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 126
+    SEM_PUSH_CONSTANT              shift and go to state 136
+
+state 104
+
+    (44) EXPRESSION -> NOT SUPEREXP . SEM_RESOLVE_NOT
+    (45) EXPRESSION -> NOT SUPEREXP . SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> NOT SUPEREXP . SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (91) SEM_RESOLVE_NOT -> . empty
+    (74) empty -> .
+
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_NOT                shift and go to state 137
+    empty                          shift and go to state 138
+
+state 105
+
+    (65) FACTOR -> plus . CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    CONSTANT                       shift and go to state 139
+
+state 106
+
+    (60) TERM -> FACTOR . SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> FACTOR . SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> FACTOR . SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (83) SEM_RESOLVE_TIMESDIVIDE -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_TIMESDIVIDE        shift and go to state 140
+    empty                          shift and go to state 141
+
+state 107
+
+    (66) FACTOR -> minus . CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    CONSTANT                       shift and go to state 142
+
+state 108
+
+    (43) RETURN -> return EXPRESSION semicolon .
+
+    id              reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+    readto          reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+    print           reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+    if              reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+    while           reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+    return          reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+    rk              reduce using rule 43 (RETURN -> return EXPRESSION semicolon .)
+
+
+state 109
+
+    (18) FUNCPARAMETERS -> TYPE id comma . FUNCPARAMETERS
+    (17) FUNCPARAMETERS -> . TYPE id
+    (18) FUNCPARAMETERS -> . TYPE id comma FUNCPARAMETERS
+    (19) FUNCPARAMETERS -> . empty
+    (9) TYPE -> . int SEM_STORE_TYPE
+    (10) TYPE -> . decimal SEM_STORE_TYPE
+    (11) TYPE -> . bool SEM_STORE_TYPE
+    (74) empty -> .
+
+    int             shift and go to state 15
+    decimal         shift and go to state 16
+    bool            shift and go to state 17
+    rp              reduce using rule 74 (empty -> .)
+
+    FUNCPARAMETERS                 shift and go to state 143
+    TYPE                           shift and go to state 63
+    empty                          shift and go to state 65
+
+state 110
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk . DECLARATIONS STATEMENTS rk SEM_END_FUNC
+    (2) DECLARATIONS -> . VARDEC DECLARATIONS
+    (3) DECLARATIONS -> . LISTDEC DECLARATIONS
+    (4) DECLARATIONS -> . empty
+    (5) VARDEC -> . var TYPE VARIDS semicolon
+    (8) LISTDEC -> . list TYPE VARIDS semicolon
+    (74) empty -> .
+
+    var             shift and go to state 9
+    list            shift and go to state 6
+    id              reduce using rule 74 (empty -> .)
+    readto          reduce using rule 74 (empty -> .)
+    print           reduce using rule 74 (empty -> .)
+    if              reduce using rule 74 (empty -> .)
+    while           reduce using rule 74 (empty -> .)
+    return          reduce using rule 74 (empty -> .)
+    rk              reduce using rule 74 (empty -> .)
+
+    VARDEC                         shift and go to state 4
+    DECLARATIONS                   shift and go to state 144
+    LISTDEC                        shift and go to state 8
+    empty                          shift and go to state 7
+
+state 111
+
+    (42) LOOP -> while SEM_PUSH_START lp EXPRESSION . rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+
+    rp              shift and go to state 145
+
+
+state 112
+
+    (33) READ -> readto lp id rp . semicolon
+
+    semicolon       shift and go to state 146
+
+
+state 113
+
+    (31) LISTINDEX -> lb EXP . rb LISTINDEX
+
+    rb              shift and go to state 147
+
+
+state 114
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal . SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    not             reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    SEM_PUSH_OPERATOR              shift and go to state 148
+    empty                          shift and go to state 74
+
+state 115
+
+    (35) FUNCCALL -> id lp CALLPARAMETERS rp . semicolon
+
+    semicolon       shift and go to state 149
+
+
+state 116
+
+    (37) CALLPARAMETERS -> EXPRESSION comma . CALLPARAMETERS
+    (36) CALLPARAMETERS -> . EXPRESSION
+    (37) CALLPARAMETERS -> . EXPRESSION comma CALLPARAMETERS
+    (38) CALLPARAMETERS -> . empty
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (74) empty -> .
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+
+    rp              reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+    not             shift and go to state 76
+
+    CALLPARAMETERS                 shift and go to state 150
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 89
+    empty                          shift and go to state 90
+
+state 117
+
+    (39) CONDITION -> if lp EXPRESSION rp . SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+    (92) SEM_GEN_GOTOF -> . empty
+    (74) empty -> .
+
+    lk              reduce using rule 74 (empty -> .)
+
+    SEM_GEN_GOTOF                  shift and go to state 151
+    empty                          shift and go to state 152
+
+state 118
+
+    (34) PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION . rp SEM_CREATE_ONEARG_QUAD semicolon
+
+    rp              shift and go to state 153
+
+
+state 119
+
+    (51) RELOP -> gt . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 154
+
+state 120
+
+    (50) SUPEREXP -> EXP RELOP . EXP SEM_RESOLVE_RELOP
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    EXP                            shift and go to state 155
+    FACTOR                         shift and go to state 106
+
+state 121
+
+    (55) RELOP -> ee . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 156
+
+state 122
+
+    (53) RELOP -> lt . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 157
+
+state 123
+
+    (56) RELOP -> ne . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 158
+
+state 124
+
+    (52) RELOP -> ge . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 159
+
+state 125
+
+    (54) RELOP -> le . SEM_PUSH_OPERATOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 160
+
+state 126
+
+    (87) SEM_PUSH_CONSTANT -> empty .
+
+    times           reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    divide          reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    plus            reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    minus           reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    gt              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    ge              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    lt              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    le              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    ee              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    ne              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    and             reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    or              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    semicolon       reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    comma           reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    rp              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+    rb              reduce using rule 87 (SEM_PUSH_CONSTANT -> empty .)
+
+
+state 127
+
+    (72) CONSTANT -> false SEM_PUSH_CONSTANT .
+
+    times           reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    divide          reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    plus            reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    minus           reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    rb              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    gt              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    ge              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    lt              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    le              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    ee              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    ne              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    and             reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    or              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    semicolon       reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    comma           reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+    rp              reduce using rule 72 (CONSTANT -> false SEM_PUSH_CONSTANT .)
+
+
+state 128
+
+    (67) CONSTANT -> id SEM_PUSH_OPERAND . LISTINDEX
+    (68) CONSTANT -> id SEM_PUSH_OPERAND . lp CALLPARAMETERS rp
+    (31) LISTINDEX -> . lb EXP rb LISTINDEX
+    (32) LISTINDEX -> . empty
+    (74) empty -> .
+
+    lp              shift and go to state 162
+    lb              shift and go to state 85
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 87
+    LISTINDEX                      shift and go to state 161
+
+state 129
+
+    (57) EXP -> TERM SEM_RESOLVE_PLUSMINUS .
+    (58) EXP -> TERM SEM_RESOLVE_PLUSMINUS . plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> TERM SEM_RESOLVE_PLUSMINUS . minus SEM_PUSH_OPERATOR EXP
+
+    rb              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    and             reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    or              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    semicolon       reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    comma           reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    rp              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    gt              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    ge              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    lt              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    le              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    ee              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    ne              reduce using rule 57 (EXP -> TERM SEM_RESOLVE_PLUSMINUS .)
+    plus            shift and go to state 163
+    minus           shift and go to state 164
+
+
+state 130
+
+    (82) SEM_RESOLVE_PLUSMINUS -> empty .
+
+    plus            reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    minus           reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    gt              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    ge              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    lt              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    le              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    ee              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    ne              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    and             reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    or              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    semicolon       reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    comma           reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    rp              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+    rb              reduce using rule 82 (SEM_RESOLVE_PLUSMINUS -> empty .)
+
+
+state 131
+
+    (73) CONSTANT -> true SEM_PUSH_CONSTANT .
+
+    times           reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    divide          reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    plus            reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    minus           reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    rb              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    gt              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    ge              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    lt              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    le              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    ee              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    ne              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    and             reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    or              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    semicolon       reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    comma           reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+    rp              reduce using rule 73 (CONSTANT -> true SEM_PUSH_CONSTANT .)
+
+
+state 132
+
+    (63) FACTOR -> lp SEM_PUSH_PAREN . EXPRESSION rp SEM_POP_PAREN
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 77
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 165
+
+state 133
+
+    (84) SEM_PUSH_PAREN -> empty .
+
+    not             reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    lp              reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    plus            reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    minus           reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    id              reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    c_int           reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    c_decimal       reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    c_string        reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    false           reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+    true            reduce using rule 84 (SEM_PUSH_PAREN -> empty .)
+
+
+state 134
+
+    (71) CONSTANT -> c_string SEM_PUSH_CONSTANT .
+
+    times           reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    divide          reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    plus            reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    minus           reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    rb              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    gt              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    ge              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    lt              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    le              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    ee              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    ne              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    and             reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    or              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    semicolon       reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    comma           reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+    rp              reduce using rule 71 (CONSTANT -> c_string SEM_PUSH_CONSTANT .)
+
+
+state 135
+
+    (69) CONSTANT -> c_int SEM_PUSH_CONSTANT .
+
+    times           reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    divide          reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    plus            reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    minus           reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    rb              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    gt              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    ge              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    lt              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    le              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    ee              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    ne              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    and             reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    or              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    semicolon       reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    comma           reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+    rp              reduce using rule 69 (CONSTANT -> c_int SEM_PUSH_CONSTANT .)
+
+
+state 136
+
+    (70) CONSTANT -> c_decimal SEM_PUSH_CONSTANT .
+
+    times           reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    divide          reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    plus            reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    minus           reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    rb              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    gt              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    ge              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    lt              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    le              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    ee              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    ne              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    and             reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    or              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    semicolon       reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    comma           reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+    rp              reduce using rule 70 (CONSTANT -> c_decimal SEM_PUSH_CONSTANT .)
+
+
+state 137
+
+    (44) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT .
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT . and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT . or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+
+    comma           reduce using rule 44 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT .)
+    rp              reduce using rule 44 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT .)
+    semicolon       reduce using rule 44 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT .)
+    and             shift and go to state 166
+    or              shift and go to state 167
+
+
+state 138
+
+    (91) SEM_RESOLVE_NOT -> empty .
+
+    semicolon       reduce using rule 91 (SEM_RESOLVE_NOT -> empty .)
+    comma           reduce using rule 91 (SEM_RESOLVE_NOT -> empty .)
+    rp              reduce using rule 91 (SEM_RESOLVE_NOT -> empty .)
+    and             reduce using rule 91 (SEM_RESOLVE_NOT -> empty .)
+    or              reduce using rule 91 (SEM_RESOLVE_NOT -> empty .)
+
+
+state 139
+
+    (65) FACTOR -> plus CONSTANT .
+
+    times           reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    divide          reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    plus            reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    minus           reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    gt              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    ge              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    lt              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    le              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    ee              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    ne              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    and             reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    or              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    semicolon       reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    comma           reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    rp              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+    rb              reduce using rule 65 (FACTOR -> plus CONSTANT .)
+
+
+state 140
+
+    (60) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .
+    (61) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE . times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE . divide SEM_PUSH_OPERATOR TERM
+
+    plus            reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    minus           reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    gt              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    ge              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    lt              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    le              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    ee              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    ne              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    and             reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    or              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    semicolon       reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    comma           reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    rp              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    rb              reduce using rule 60 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE .)
+    times           shift and go to state 169
+    divide          shift and go to state 168
+
+
+state 141
+
+    (83) SEM_RESOLVE_TIMESDIVIDE -> empty .
+
+    times           reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    divide          reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    plus            reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    minus           reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    gt              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    ge              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    lt              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    le              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    ee              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    ne              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    and             reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    or              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    semicolon       reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    comma           reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    rp              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+    rb              reduce using rule 83 (SEM_RESOLVE_TIMESDIVIDE -> empty .)
+
+
+state 142
+
+    (66) FACTOR -> minus CONSTANT .
+
+    times           reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    divide          reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    plus            reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    minus           reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    gt              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    ge              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    lt              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    le              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    ee              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    ne              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    and             reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    or              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    semicolon       reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    comma           reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    rp              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+    rb              reduce using rule 66 (FACTOR -> minus CONSTANT .)
+
+
+state 143
+
+    (18) FUNCPARAMETERS -> TYPE id comma FUNCPARAMETERS .
+
+    rp              reduce using rule 18 (FUNCPARAMETERS -> TYPE id comma FUNCPARAMETERS .)
+
+
+state 144
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS . STATEMENTS rk SEM_END_FUNC
+    (21) STATEMENTS -> . STATEMENT STATEMENTS
+    (22) STATEMENTS -> . empty
+    (23) STATEMENT -> . ASSIGN
+    (24) STATEMENT -> . READ
+    (25) STATEMENT -> . PRINT
+    (26) STATEMENT -> . FUNCCALL
+    (27) STATEMENT -> . CONDITION
+    (28) STATEMENT -> . LOOP
+    (29) STATEMENT -> . RETURN
+    (74) empty -> .
+    (30) ASSIGN -> . id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon
+    (33) READ -> . readto lp id rp semicolon
+    (34) PRINT -> . print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon
+    (35) FUNCCALL -> . id lp CALLPARAMETERS rp semicolon
+    (39) CONDITION -> . if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END
+    (42) LOOP -> . while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+    (43) RETURN -> . return EXPRESSION semicolon
+
+    rk              reduce using rule 74 (empty -> .)
+    id              shift and go to state 52
+    readto          shift and go to state 49
+    print           shift and go to state 55
+    if              shift and go to state 53
+    while           shift and go to state 48
+    return          shift and go to state 58
+
+    STATEMENTS                     shift and go to state 170
+    FUNCCALL                       shift and go to state 54
+    READ                           shift and go to state 47
+    PRINT                          shift and go to state 50
+    RETURN                         shift and go to state 51
+    ASSIGN                         shift and go to state 56
+    CONDITION                      shift and go to state 57
+    STATEMENT                      shift and go to state 59
+    empty                          shift and go to state 60
+    LOOP                           shift and go to state 61
+
+state 145
+
+    (42) LOOP -> while SEM_PUSH_START lp EXPRESSION rp . SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP
+    (92) SEM_GEN_GOTOF -> . empty
+    (74) empty -> .
+
+    lk              reduce using rule 74 (empty -> .)
+
+    SEM_GEN_GOTOF                  shift and go to state 171
+    empty                          shift and go to state 152
+
+state 146
+
+    (33) READ -> readto lp id rp semicolon .
+
+    id              reduce using rule 33 (READ -> readto lp id rp semicolon .)
+    readto          reduce using rule 33 (READ -> readto lp id rp semicolon .)
+    print           reduce using rule 33 (READ -> readto lp id rp semicolon .)
+    if              reduce using rule 33 (READ -> readto lp id rp semicolon .)
+    while           reduce using rule 33 (READ -> readto lp id rp semicolon .)
+    return          reduce using rule 33 (READ -> readto lp id rp semicolon .)
+    rk              reduce using rule 33 (READ -> readto lp id rp semicolon .)
+
+
+state 147
+
+    (31) LISTINDEX -> lb EXP rb . LISTINDEX
+    (31) LISTINDEX -> . lb EXP rb LISTINDEX
+    (32) LISTINDEX -> . empty
+    (74) empty -> .
+
+    lb              shift and go to state 85
+    equal           reduce using rule 74 (empty -> .)
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 87
+    LISTINDEX                      shift and go to state 172
+
+state 148
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR . EXPRESSION SEM_ASSIGN semicolon
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 77
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 173
+
+state 149
+
+    (35) FUNCCALL -> id lp CALLPARAMETERS rp semicolon .
+
+    id              reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+    readto          reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+    print           reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+    if              reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+    while           reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+    return          reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+    rk              reduce using rule 35 (FUNCCALL -> id lp CALLPARAMETERS rp semicolon .)
+
+
+state 150
+
+    (37) CALLPARAMETERS -> EXPRESSION comma CALLPARAMETERS .
+
+    rp              reduce using rule 37 (CALLPARAMETERS -> EXPRESSION comma CALLPARAMETERS .)
+
+
+state 151
+
+    (39) CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF . BLOCK ELSEBLOCK SEM_FILL_END
+    (20) BLOCK -> . lk STATEMENTS rk
+
+    lk              shift and go to state 42
+
+    BLOCK                          shift and go to state 174
+
+state 152
+
+    (92) SEM_GEN_GOTOF -> empty .
+
+    lk              reduce using rule 92 (SEM_GEN_GOTOF -> empty .)
+
+
+state 153
+
+    (34) PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp . SEM_CREATE_ONEARG_QUAD semicolon
+    (88) SEM_CREATE_ONEARG_QUAD -> . empty
+    (74) empty -> .
+
+    semicolon       reduce using rule 74 (empty -> .)
+
+    SEM_CREATE_ONEARG_QUAD         shift and go to state 175
+    empty                          shift and go to state 176
+
+state 154
+
+    (51) RELOP -> gt SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    id              reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    false           reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+    true            reduce using rule 51 (RELOP -> gt SEM_PUSH_OPERATOR .)
+
+
+state 155
+
+    (50) SUPEREXP -> EXP RELOP EXP . SEM_RESOLVE_RELOP
+    (89) SEM_RESOLVE_RELOP -> . empty
+    (74) empty -> .
+
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_RELOP              shift and go to state 177
+    empty                          shift and go to state 178
+
+state 156
+
+    (55) RELOP -> ee SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    id              reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    false           reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+    true            reduce using rule 55 (RELOP -> ee SEM_PUSH_OPERATOR .)
+
+
+state 157
+
+    (53) RELOP -> lt SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    id              reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    false           reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+    true            reduce using rule 53 (RELOP -> lt SEM_PUSH_OPERATOR .)
+
+
+state 158
+
+    (56) RELOP -> ne SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    id              reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    false           reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+    true            reduce using rule 56 (RELOP -> ne SEM_PUSH_OPERATOR .)
+
+
+state 159
+
+    (52) RELOP -> ge SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    id              reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    false           reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+    true            reduce using rule 52 (RELOP -> ge SEM_PUSH_OPERATOR .)
+
+
+state 160
+
+    (54) RELOP -> le SEM_PUSH_OPERATOR .
+
+    lp              reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    plus            reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    minus           reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    id              reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    c_int           reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    c_decimal       reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    c_string        reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    false           reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+    true            reduce using rule 54 (RELOP -> le SEM_PUSH_OPERATOR .)
+
+
+state 161
+
+    (67) CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .
+
+    times           reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    divide          reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    plus            reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    minus           reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    rb              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    gt              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    ge              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    lt              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    le              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    ee              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    ne              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    and             reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    or              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    semicolon       reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    comma           reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+    rp              reduce using rule 67 (CONSTANT -> id SEM_PUSH_OPERAND LISTINDEX .)
+
+
+state 162
+
+    (68) CONSTANT -> id SEM_PUSH_OPERAND lp . CALLPARAMETERS rp
+    (36) CALLPARAMETERS -> . EXPRESSION
+    (37) CALLPARAMETERS -> . EXPRESSION comma CALLPARAMETERS
+    (38) CALLPARAMETERS -> . empty
+    (44) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT
+    (45) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (46) EXPRESSION -> . NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (74) empty -> .
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+
+    rp              reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+    not             shift and go to state 76
+
+    CALLPARAMETERS                 shift and go to state 179
+    NOT                            shift and go to state 78
+    EXPRESSION                     shift and go to state 89
+    empty                          shift and go to state 90
+
+state 163
+
+    (58) EXP -> TERM SEM_RESOLVE_PLUSMINUS plus . SEM_PUSH_OPERATOR EXP
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 180
+
+state 164
+
+    (59) EXP -> TERM SEM_RESOLVE_PLUSMINUS minus . SEM_PUSH_OPERATOR EXP
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 181
+
+state 165
+
+    (63) FACTOR -> lp SEM_PUSH_PAREN EXPRESSION . rp SEM_POP_PAREN
+
+    rp              shift and go to state 182
+
+
+state 166
+
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and . SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    not             reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    SEM_PUSH_OPERATOR              shift and go to state 183
+    empty                          shift and go to state 74
+
+state 167
+
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or . SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    not             reduce using rule 74 (empty -> .)
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    SEM_PUSH_OPERATOR              shift and go to state 184
+    empty                          shift and go to state 74
+
+state 168
+
+    (62) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide . SEM_PUSH_OPERATOR TERM
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 185
+
+state 169
+
+    (61) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times . SEM_PUSH_OPERATOR TERM
+    (81) SEM_PUSH_OPERATOR -> . empty
+    (74) empty -> .
+
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 74
+    SEM_PUSH_OPERATOR              shift and go to state 186
+
+state 170
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS . rk SEM_END_FUNC
+
+    rk              shift and go to state 187
+
+
+state 171
+
+    (42) LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF . BLOCK SEM_FILL_LOOP
+    (20) BLOCK -> . lk STATEMENTS rk
+
+    lk              shift and go to state 42
+
+    BLOCK                          shift and go to state 188
+
+state 172
+
+    (31) LISTINDEX -> lb EXP rb LISTINDEX .
+
+    equal           reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    times           reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    divide          reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    plus            reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    minus           reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    gt              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    ge              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    lt              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    le              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    ee              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    ne              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    and             reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    or              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    semicolon       reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    comma           reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    rp              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+    rb              reduce using rule 31 (LISTINDEX -> lb EXP rb LISTINDEX .)
+
+
+state 173
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION . SEM_ASSIGN semicolon
+    (86) SEM_ASSIGN -> . empty
+    (74) empty -> .
+
+    semicolon       reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 189
+    SEM_ASSIGN                     shift and go to state 190
+
+state 174
+
+    (39) CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK . ELSEBLOCK SEM_FILL_END
+    (40) ELSEBLOCK -> . else SEM_GENANDFILL_GOTO BLOCK
+    (41) ELSEBLOCK -> . empty
+    (74) empty -> .
+
+    else            shift and go to state 193
+    id              reduce using rule 74 (empty -> .)
+    readto          reduce using rule 74 (empty -> .)
+    print           reduce using rule 74 (empty -> .)
+    if              reduce using rule 74 (empty -> .)
+    while           reduce using rule 74 (empty -> .)
+    return          reduce using rule 74 (empty -> .)
+    rk              reduce using rule 74 (empty -> .)
+
+    ELSEBLOCK                      shift and go to state 191
+    empty                          shift and go to state 192
+
+state 175
+
+    (34) PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD . semicolon
+
+    semicolon       shift and go to state 194
+
+
+state 176
+
+    (88) SEM_CREATE_ONEARG_QUAD -> empty .
+
+    semicolon       reduce using rule 88 (SEM_CREATE_ONEARG_QUAD -> empty .)
+
+
+state 177
+
+    (50) SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP .
+
+    semicolon       reduce using rule 50 (SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP .)
+    comma           reduce using rule 50 (SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP .)
+    rp              reduce using rule 50 (SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP .)
+    and             reduce using rule 50 (SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP .)
+    or              reduce using rule 50 (SUPEREXP -> EXP RELOP EXP SEM_RESOLVE_RELOP .)
+
+
+state 178
+
+    (89) SEM_RESOLVE_RELOP -> empty .
+
+    and             reduce using rule 89 (SEM_RESOLVE_RELOP -> empty .)
+    or              reduce using rule 89 (SEM_RESOLVE_RELOP -> empty .)
+    semicolon       reduce using rule 89 (SEM_RESOLVE_RELOP -> empty .)
+    comma           reduce using rule 89 (SEM_RESOLVE_RELOP -> empty .)
+    rp              reduce using rule 89 (SEM_RESOLVE_RELOP -> empty .)
+
+
+state 179
+
+    (68) CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS . rp
+
+    rp              shift and go to state 195
+
+
+state 180
+
+    (58) EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR . EXP
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    EXP                            shift and go to state 196
+    FACTOR                         shift and go to state 106
+
+state 181
+
+    (59) EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR . EXP
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    EXP                            shift and go to state 197
+    FACTOR                         shift and go to state 106
+
+state 182
+
+    (63) FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp . SEM_POP_PAREN
+    (85) SEM_POP_PAREN -> . empty
+    (74) empty -> .
+
+    times           reduce using rule 74 (empty -> .)
+    divide          reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    gt              reduce using rule 74 (empty -> .)
+    ge              reduce using rule 74 (empty -> .)
+    lt              reduce using rule 74 (empty -> .)
+    le              reduce using rule 74 (empty -> .)
+    ee              reduce using rule 74 (empty -> .)
+    ne              reduce using rule 74 (empty -> .)
+    and             reduce using rule 74 (empty -> .)
+    or              reduce using rule 74 (empty -> .)
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+    rb              reduce using rule 74 (empty -> .)
+
+    SEM_POP_PAREN                  shift and go to state 198
+    empty                          shift and go to state 199
+
+state 183
+
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR . NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    NOT                            shift and go to state 200
+    empty                          shift and go to state 77
+
+state 184
+
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR . NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (47) NOT -> . not SEM_PUSH_OPERATOR
+    (48) NOT -> . empty
+    (74) empty -> .
+
+    not             shift and go to state 76
+    lp              reduce using rule 74 (empty -> .)
+    plus            reduce using rule 74 (empty -> .)
+    minus           reduce using rule 74 (empty -> .)
+    id              reduce using rule 74 (empty -> .)
+    c_int           reduce using rule 74 (empty -> .)
+    c_decimal       reduce using rule 74 (empty -> .)
+    c_string        reduce using rule 74 (empty -> .)
+    false           reduce using rule 74 (empty -> .)
+    true            reduce using rule 74 (empty -> .)
+
+    NOT                            shift and go to state 201
+    empty                          shift and go to state 77
+
+state 185
+
+    (62) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR . TERM
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 202
+    CONSTANT                       shift and go to state 94
+    FACTOR                         shift and go to state 106
+
+state 186
+
+    (61) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR . TERM
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 203
+    CONSTANT                       shift and go to state 94
+    FACTOR                         shift and go to state 106
+
+state 187
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk . SEM_END_FUNC
+    (78) SEM_END_FUNC -> . empty
+    (74) empty -> .
+
+    function        reduce using rule 74 (empty -> .)
+    program         reduce using rule 74 (empty -> .)
+
+    SEM_END_FUNC                   shift and go to state 204
+    empty                          shift and go to state 205
+
+state 188
+
+    (42) LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK . SEM_FILL_LOOP
+    (96) SEM_FILL_LOOP -> . empty
+    (74) empty -> .
+
+    id              reduce using rule 74 (empty -> .)
+    readto          reduce using rule 74 (empty -> .)
+    print           reduce using rule 74 (empty -> .)
+    if              reduce using rule 74 (empty -> .)
+    while           reduce using rule 74 (empty -> .)
+    return          reduce using rule 74 (empty -> .)
+    rk              reduce using rule 74 (empty -> .)
+
+    SEM_FILL_LOOP                  shift and go to state 206
+    empty                          shift and go to state 207
+
+state 189
+
+    (86) SEM_ASSIGN -> empty .
+
+    semicolon       reduce using rule 86 (SEM_ASSIGN -> empty .)
+
+
+state 190
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN . semicolon
+
+    semicolon       shift and go to state 208
+
+
+state 191
+
+    (39) CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK . SEM_FILL_END
+    (94) SEM_FILL_END -> . empty
+    (74) empty -> .
+
+    id              reduce using rule 74 (empty -> .)
+    readto          reduce using rule 74 (empty -> .)
+    print           reduce using rule 74 (empty -> .)
+    if              reduce using rule 74 (empty -> .)
+    while           reduce using rule 74 (empty -> .)
+    return          reduce using rule 74 (empty -> .)
+    rk              reduce using rule 74 (empty -> .)
+
+    empty                          shift and go to state 209
+    SEM_FILL_END                   shift and go to state 210
+
+state 192
+
+    (41) ELSEBLOCK -> empty .
+
+    id              reduce using rule 41 (ELSEBLOCK -> empty .)
+    readto          reduce using rule 41 (ELSEBLOCK -> empty .)
+    print           reduce using rule 41 (ELSEBLOCK -> empty .)
+    if              reduce using rule 41 (ELSEBLOCK -> empty .)
+    while           reduce using rule 41 (ELSEBLOCK -> empty .)
+    return          reduce using rule 41 (ELSEBLOCK -> empty .)
+    rk              reduce using rule 41 (ELSEBLOCK -> empty .)
+
+
+state 193
+
+    (40) ELSEBLOCK -> else . SEM_GENANDFILL_GOTO BLOCK
+    (93) SEM_GENANDFILL_GOTO -> . empty
+    (74) empty -> .
+
+    lk              reduce using rule 74 (empty -> .)
+
+    SEM_GENANDFILL_GOTO            shift and go to state 211
+    empty                          shift and go to state 212
+
+state 194
+
+    (34) PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .
+
+    id              reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+    readto          reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+    print           reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+    if              reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+    while           reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+    return          reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+    rk              reduce using rule 34 (PRINT -> print SEM_PUSH_OPERATOR lp EXPRESSION rp SEM_CREATE_ONEARG_QUAD semicolon .)
+
+
+state 195
+
+    (68) CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .
+
+    times           reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    divide          reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    plus            reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    minus           reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    rb              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    gt              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    ge              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    lt              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    le              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    ee              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    ne              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    and             reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    or              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    semicolon       reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    comma           reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+    rp              reduce using rule 68 (CONSTANT -> id SEM_PUSH_OPERAND lp CALLPARAMETERS rp .)
+
+
+state 196
+
+    (58) EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .
+
+    rb              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    and             reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    or              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    semicolon       reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    comma           reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    rp              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    gt              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    ge              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    lt              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    le              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    ee              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+    ne              reduce using rule 58 (EXP -> TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP .)
+
+
+state 197
+
+    (59) EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .
+
+    rb              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    and             reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    or              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    semicolon       reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    comma           reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    rp              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    gt              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    ge              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    lt              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    le              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    ee              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+    ne              reduce using rule 59 (EXP -> TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP .)
+
+
+state 198
+
+    (63) FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .
+
+    times           reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    divide          reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    plus            reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    minus           reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    gt              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    ge              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    lt              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    le              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    ee              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    ne              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    and             reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    or              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    semicolon       reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    comma           reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    rp              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+    rb              reduce using rule 63 (FACTOR -> lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN .)
+
+
+state 199
+
+    (85) SEM_POP_PAREN -> empty .
+
+    times           reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    divide          reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    plus            reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    minus           reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    gt              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    ge              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    lt              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    le              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    ee              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    ne              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    and             reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    or              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    semicolon       reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    comma           reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    rp              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+    rb              reduce using rule 85 (SEM_POP_PAREN -> empty .)
+
+
+state 200
+
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT . SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (49) SUPEREXP -> . EXP
+    (50) SUPEREXP -> . EXP RELOP EXP SEM_RESOLVE_RELOP
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    SUPEREXP                       shift and go to state 213
+    EXP                            shift and go to state 95
+    FACTOR                         shift and go to state 106
+
+state 201
+
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT . SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (49) SUPEREXP -> . EXP
+    (50) SUPEREXP -> . EXP RELOP EXP SEM_RESOLVE_RELOP
+    (57) EXP -> . TERM SEM_RESOLVE_PLUSMINUS
+    (58) EXP -> . TERM SEM_RESOLVE_PLUSMINUS plus SEM_PUSH_OPERATOR EXP
+    (59) EXP -> . TERM SEM_RESOLVE_PLUSMINUS minus SEM_PUSH_OPERATOR EXP
+    (60) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE
+    (61) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM
+    (62) TERM -> . FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM
+    (63) FACTOR -> . lp SEM_PUSH_PAREN EXPRESSION rp SEM_POP_PAREN
+    (64) FACTOR -> . CONSTANT
+    (65) FACTOR -> . plus CONSTANT
+    (66) FACTOR -> . minus CONSTANT
+    (67) CONSTANT -> . id SEM_PUSH_OPERAND LISTINDEX
+    (68) CONSTANT -> . id SEM_PUSH_OPERAND lp CALLPARAMETERS rp
+    (69) CONSTANT -> . c_int SEM_PUSH_CONSTANT
+    (70) CONSTANT -> . c_decimal SEM_PUSH_CONSTANT
+    (71) CONSTANT -> . c_string SEM_PUSH_CONSTANT
+    (72) CONSTANT -> . false SEM_PUSH_CONSTANT
+    (73) CONSTANT -> . true SEM_PUSH_CONSTANT
+
+    lp              shift and go to state 100
+    plus            shift and go to state 105
+    minus           shift and go to state 107
+    id              shift and go to state 97
+    c_int           shift and go to state 102
+    c_decimal       shift and go to state 103
+    c_string        shift and go to state 101
+    false           shift and go to state 96
+    true            shift and go to state 99
+
+    TERM                           shift and go to state 98
+    CONSTANT                       shift and go to state 94
+    SUPEREXP                       shift and go to state 214
+    EXP                            shift and go to state 95
+    FACTOR                         shift and go to state 106
+
+state 202
+
+    (62) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .
+
+    plus            reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    minus           reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    gt              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    ge              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    lt              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    le              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    ee              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    ne              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    and             reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    or              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    semicolon       reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    comma           reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    rp              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+    rb              reduce using rule 62 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE divide SEM_PUSH_OPERATOR TERM .)
+
+
+state 203
+
+    (61) TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .
+
+    plus            reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    minus           reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    gt              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    ge              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    lt              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    le              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    ee              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    ne              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    and             reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    or              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    semicolon       reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    comma           reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    rp              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+    rb              reduce using rule 61 (TERM -> FACTOR SEM_RESOLVE_TIMESDIVIDE times SEM_PUSH_OPERATOR TERM .)
+
+
+state 204
+
+    (14) FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC .
+
+    function        reduce using rule 14 (FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC .)
+    program         reduce using rule 14 (FUNCTION -> function FUNCTYPE id SEM_ADD_FUNC lp FUNCPARAMETERS rp lk DECLARATIONS STATEMENTS rk SEM_END_FUNC .)
+
+
+state 205
+
+    (78) SEM_END_FUNC -> empty .
+
+    function        reduce using rule 78 (SEM_END_FUNC -> empty .)
+    program         reduce using rule 78 (SEM_END_FUNC -> empty .)
+
+
+state 206
+
+    (42) LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .
+
+    id              reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+    readto          reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+    print           reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+    if              reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+    while           reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+    return          reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+    rk              reduce using rule 42 (LOOP -> while SEM_PUSH_START lp EXPRESSION rp SEM_GEN_GOTOF BLOCK SEM_FILL_LOOP .)
+
+
+state 207
+
+    (96) SEM_FILL_LOOP -> empty .
+
+    id              reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+    readto          reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+    print           reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+    if              reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+    while           reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+    return          reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+    rk              reduce using rule 96 (SEM_FILL_LOOP -> empty .)
+
+
+state 208
+
+    (30) ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .
+
+    id              reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+    readto          reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+    print           reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+    if              reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+    while           reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+    return          reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+    rk              reduce using rule 30 (ASSIGN -> id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon .)
+
+
+state 209
+
+    (94) SEM_FILL_END -> empty .
+
+    id              reduce using rule 94 (SEM_FILL_END -> empty .)
+    readto          reduce using rule 94 (SEM_FILL_END -> empty .)
+    print           reduce using rule 94 (SEM_FILL_END -> empty .)
+    if              reduce using rule 94 (SEM_FILL_END -> empty .)
+    while           reduce using rule 94 (SEM_FILL_END -> empty .)
+    return          reduce using rule 94 (SEM_FILL_END -> empty .)
+    rk              reduce using rule 94 (SEM_FILL_END -> empty .)
+
+
+state 210
+
+    (39) CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .
+
+    id              reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+    readto          reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+    print           reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+    if              reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+    while           reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+    return          reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+    rk              reduce using rule 39 (CONDITION -> if lp EXPRESSION rp SEM_GEN_GOTOF BLOCK ELSEBLOCK SEM_FILL_END .)
+
+
+state 211
+
+    (40) ELSEBLOCK -> else SEM_GENANDFILL_GOTO . BLOCK
+    (20) BLOCK -> . lk STATEMENTS rk
+
+    lk              shift and go to state 42
+
+    BLOCK                          shift and go to state 215
+
+state 212
+
+    (93) SEM_GENANDFILL_GOTO -> empty .
+
+    lk              reduce using rule 93 (SEM_GENANDFILL_GOTO -> empty .)
+
+
+state 213
+
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP . SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (91) SEM_RESOLVE_NOT -> . empty
+    (74) empty -> .
+
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_NOT                shift and go to state 216
+    empty                          shift and go to state 138
+
+state 214
+
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP . SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR
+    (91) SEM_RESOLVE_NOT -> . empty
+    (74) empty -> .
+
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_NOT                shift and go to state 217
+    empty                          shift and go to state 138
+
+state 215
+
+    (40) ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .
+
+    id              reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+    readto          reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+    print           reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+    if              reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+    while           reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+    return          reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+    rk              reduce using rule 40 (ELSEBLOCK -> else SEM_GENANDFILL_GOTO BLOCK .)
+
+
+state 216
+
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT . SEM_RESOLVE_ANDOR
+    (90) SEM_RESOLVE_ANDOR -> . empty
+    (74) empty -> .
+
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_ANDOR              shift and go to state 218
+    empty                          shift and go to state 219
+
+state 217
+
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT . SEM_RESOLVE_ANDOR
+    (90) SEM_RESOLVE_ANDOR -> . empty
+    (74) empty -> .
+
+    semicolon       reduce using rule 74 (empty -> .)
+    comma           reduce using rule 74 (empty -> .)
+    rp              reduce using rule 74 (empty -> .)
+
+    SEM_RESOLVE_ANDOR              shift and go to state 220
+    empty                          shift and go to state 219
+
+state 218
+
+    (45) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .
+
+    comma           reduce using rule 45 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .)
+    rp              reduce using rule 45 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .)
+    semicolon       reduce using rule 45 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT and SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .)
+
+
+state 219
+
+    (90) SEM_RESOLVE_ANDOR -> empty .
+
+    semicolon       reduce using rule 90 (SEM_RESOLVE_ANDOR -> empty .)
+    comma           reduce using rule 90 (SEM_RESOLVE_ANDOR -> empty .)
+    rp              reduce using rule 90 (SEM_RESOLVE_ANDOR -> empty .)
+
+
+state 220
+
+    (46) EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .
+
+    comma           reduce using rule 46 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .)
+    rp              reduce using rule 46 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .)
+    semicolon       reduce using rule 46 (EXPRESSION -> NOT SUPEREXP SEM_RESOLVE_NOT or SEM_PUSH_OPERATOR NOT SUPEREXP SEM_RESOLVE_NOT SEM_RESOLVE_ANDOR .)
+

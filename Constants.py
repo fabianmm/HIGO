@@ -23,5 +23,10 @@ class Operations:
   And = 10
   Or = 11
   Assign = 12
-  Parenthesis = 13
-  Print = 14
+  Not = 13
+  Parenthesis = 14
+  Print = 15
+  Goto = 20
+  GotoF = 21
+  GotoT = 22
+  GoSub = 23
