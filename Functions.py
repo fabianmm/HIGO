@@ -7,6 +7,10 @@ def buildQuad(operator, term1, term2, result):
   #print(quad)
   return quad
 
+def newQuad(quadruples, operation, left, right, result):
+  quad = {'operation' : operation, 'left' : left, 'right' : right, 'result' : result}
+  quadruples.append(quad)
+
 def getOperationCode(operation):
   if operation == '+':
     return Operations.Plus
@@ -38,6 +42,8 @@ def getOperationCode(operation):
     return Operations.Not
   if operation == 'print':
     return Operations.Print
+  if operation == 'readto':
+    return Operations.Read
 
 def printStacks(operations, operands, types):
   print("Operations: ", operations) 
@@ -48,7 +54,7 @@ def printQuads(quads):
   i = 0
   print("QUADRUPLES")
   for item in quads:
-    print(str(i) + ": ", str(item['operation']), str(item['term1']), str(item['term2']), str(item['result']))
+    print(str(i) + ": ", str(item['operation']), str(item['left']), str(item['right']), str(item['result']))
     i = i + 1
 
 def getTypeFromCode(typeCode):
@@ -82,3 +88,15 @@ def generateOneArgQuadruple(operation, result):
 
 def fill(quadNumber, location, quadruples):
   quadruples[quadNumber]['result'] = location
+
+def typeToString(typeCode):
+  if typeCode == 0:
+    return 'int'
+  if typeCode == 1:
+    return 'decimal'
+  if typeCode == 2:
+    return 'bool'
+  if typeCode == 3:
+    return 'string'
+  if typeCode == 4:
+    return 'void'

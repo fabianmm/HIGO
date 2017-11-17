@@ -2,8 +2,22 @@ class Types:
   Int = 0
   Decimal = 1
   Bool = 2
-  String = 4
-  Void = 5
+  String = 3
+  Void = 4
+
+class AddressStart:
+  class Global:
+    Int = 10000
+    Decimal = 11000
+    Bool = 12000
+  class Local:
+    Int = 20000
+    Decimal = 21000
+    Bool = 22000
+  class Temp:
+    Int = 30000
+    Decimal = 31000
+    Bool = 32000
 
 class Errors:
   TypeMismatch = -1
@@ -26,7 +40,13 @@ class Operations:
   Not = 13
   Parenthesis = 14
   Print = 15
+  Read = 16
   Goto = 20
   GotoF = 21
-  GotoT = 22
-  GoSub = 23
+  GoSub = 22
+  EndProc = 23
+  Era = 24
+  Param = 25
+  Return = 30
+  GlobalEra = 40
+  End = 50

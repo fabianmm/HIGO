@@ -1,0 +1,26 @@
+var int A, B, C, D;
+var decimal num;
+var bool F;
+function void uno()
+{
+  var int i;
+  var decimal j, k, l;
+  A = B + C;
+  C = A * D;
+}
+
+function decimal dos(decimal X, int Y, decimal Z) {
+  X = X * Y;
+  Z = Z + A;
+  return X;
+}
+program test{
+  A = 1;
+  B = 2;
+  C = 3;
+  D = 4;
+  B = A + B + C - D * A * B + C;
+  uno();
+  num = dos(1.2, A, 2.2);
+  print("hola");
+}

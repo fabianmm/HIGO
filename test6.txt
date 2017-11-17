@@ -1,0 +1,44 @@
+var int a, b, c;
+var decimal d, e, f;
+var bool g, h;
+program mvTest1{
+  a = 2;
+  b = 5;
+  c = a * (b - a);
+  print("c:");
+  print(c);
+  d = 10.5;
+  e = 2.34;
+  f = d / e + a * b + 1;
+  if (f > 0)
+  {
+    print("f es mayor a 0");
+  }
+  g = true;
+  h = false;
+  if (g and h) {
+    print("g y h son true");
+  }
+  else {
+    print("g y h no son true");
+  }
+  if (g or h) {
+    print("g o h son true");
+  }
+  else {
+    print("g o h no son true");
+  }
+
+  if (not h and g) {
+    print("si jalo esta wea");
+  }
+
+
+  print("f:");
+  print(f);
+
+  print("Teclea el valor de a: ");
+  readto(a);
+  print("A ahora vale: ");
+  print(a);
+}
