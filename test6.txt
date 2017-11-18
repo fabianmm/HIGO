@@ -1,6 +1,16 @@
 var int a, b, c;
 var decimal d, e, f;
 var bool g, h;
+
+function decimal mate(decimal x, decimal y){
+  var decimal aux;
+  aux = 10;
+  aux = aux + x * y;
+  print("aux:");
+  print(aux);
+  return aux;
+}
+
 program mvTest1{
   a = 2;
   b = 5;
@@ -10,35 +20,8 @@ program mvTest1{
   d = 10.5;
   e = 2.34;
   f = d / e + a * b + 1;
-  if (f > 0)
-  {
-    print("f es mayor a 0");
-  }
-  g = true;
-  h = false;
-  if (g and h) {
-    print("g y h son true");
-  }
-  else {
-    print("g y h no son true");
-  }
-  if (g or h) {
-    print("g o h son true");
-  }
-  else {
-    print("g o h no son true");
-  }
-
-  if (not h and g) {
-    print("si jalo esta wea");
-  }
-
-
-  print("f:");
+  
+  f = mate(d, e);
+  print("F:");
   print(f);
-
-  print("Teclea el valor de a: ");
-  readto(a);
-  print("A ahora vale: ");
-  print(a);
 }

@@ -17,6 +17,7 @@ quadruples = []         # { operation, term1, term2, result }
 operandStack = []
 operatorStack = []
 typesStack = []
+eraStack = []
 temporalCounter = 0
 jumpStack = []
 paramCounter = 0
@@ -153,7 +154,7 @@ lexer = lex.lex()
 # Grammar Rules
 
 def p_PROGRAM(p):
-    '''PROGRAM : SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id SEM_PROGRAM_STARTS BLOCK SEM_PROGRAM_END'''
+    '''PROGRAM : SEM_CODE_STARTS DECLARATIONS FUNCTIONS program id SEM_PROGRAM_STARTS BLOCK SEM_FILL_ERAS SEM_PROGRAM_END'''
     print("Parse successful")
 
 def p_DECLARATIONS(p):
@@ -281,7 +282,7 @@ def p_FACTOR(p):
 
 def p_CONSTANT(p):
     '''CONSTANT : id SEM_PUSH_OPERAND LISTINDEX
-                | id SEM_VERIFY_FUNC lp SEM_GEN_ERA CALLPARAMETERS rp SEM_VERIFY_NUM_PARAMS SEM_GEN_GOSUB
+                | id SEM_VERIFY_FUNC lp SEM_PUSH_PAREN SEM_GEN_ERA CALLPARAMETERS rp SEM_POP_PAREN SEM_VERIFY_NUM_PARAMS SEM_GEN_GOSUB_ASSIGN
                 | c_int SEM_PUSH_CONSTANT
                 | c_decimal SEM_PUSH_CONSTANT
                 | c_string SEM_PUSH_CONSTANT
@@ -303,11 +304,15 @@ def p_SEM_CODE_STARTS(p):
     global functionDirectory, currentScope, currentType, quadCounter
     currentScope = 'global'
     currentType = Types.Void
-    functionDirectory[currentScope] = { 'type' : currentType, 'numVars' : 0, 'int' : 0, 'decimal' : 0, 'bool' : 0, 'varTable' : {}}
+    functionDirectory[currentScope] = { 'type' : currentType, 'varTable' : {}}
     newQuad(quadruples, Operations.GlobalEra, None, None, None)
     newQuad(quadruples, Operations.GlobalEra, None, None, None)
     newQuad(quadruples, Operations.Goto, None, None, None)
     quadCounter += 3
+    tempVarCount[currentScope] = {}
+    tempVarCount[currentScope]['int'] = AddressStart.Temp.Int
+    tempVarCount[currentScope]['decimal'] = AddressStart.Temp.Decimal
+    tempVarCount[currentScope]['bool'] = AddressStart.Temp.Bool
 
 
 def p_SEM_PROGRAM_STARTS(p):
@@ -315,10 +320,6 @@ def p_SEM_PROGRAM_STARTS(p):
     global currentScope, currentType
     currentScope = 'global'
     currentType = Types.Void
-    tempVarCount[currentScope] = {}
-    tempVarCount[currentScope]['int'] = AddressStart.Temp.Int
-    tempVarCount[currentScope]['decimal'] = AddressStart.Temp.Decimal
-    tempVarCount[currentScope]['bool'] = AddressStart.Temp.Bool
     # Fill initial Goto to main
     fill(2, quadCounter, quadruples)
 
@@ -348,22 +349,22 @@ def p_SEM_ADD_FUNC(p):
         exit(1)
     else:
         # Create function
-        functionDirectory[functionName] = {'type' : currentType, 'params' : [], 'numParams' : 0, 'numVars' : 0, 'varTable' : {}, 'int' : 0, 'decimal': 0, 'bool': 0 }
+        functionDirectory[functionName] = {'type' : currentType, 'params' : [], 'numParams' : 0, 'numVars' : 0, 'varTable' : {}, 'int' : 0, 'decimal': 0, 'bool': 0 , 'quadStart' : quadCounter}
         currentScope = functionName
         localVarCount[functionName] = {}
         localVarCount[functionName]['int'] = AddressStart.Local.Int
         localVarCount[functionName]['decimal'] = AddressStart.Local.Decimal
         localVarCount[functionName]['bool'] = AddressStart.Local.Bool
         tempVarCount[functionName] = {}
-        tempVarCount[functionName]['int'] = AddressStart.Local.Int
-        tempVarCount[functionName]['decimal'] = AddressStart.Local.Decimal
-        tempVarCount[functionName]['bool'] = AddressStart.Local.Bool
+        tempVarCount[functionName]['int'] = AddressStart.Temp.Int
+        tempVarCount[functionName]['decimal'] = AddressStart.Temp.Decimal
+        tempVarCount[functionName]['bool'] = AddressStart.Temp.Bool
           
 
 def p_SEM_END_FUNC(p):
     '''SEM_END_FUNC : empty'''
     global functionDirectory, quadCounter
-    #pprint(functionDirectory)
+    # pprint(functionDirectory)
 
     functionDirectory[currentScope]['varTable'].clear()
     newQuad(quadruples, Operations.EndProc, None, None, None)
@@ -484,12 +485,13 @@ def p_SEM_POP_PAREN(p):
 def p_SEM_ASSIGN(p):
     '''SEM_ASSIGN : empty'''
     global quadCounter
+    #printStacks(operatorStack, operandStack, typesStack)
     operation = operatorStack.pop()
     left = operandStack.pop()
     leftType = typesStack.pop()
     result = operandStack.pop()
     resultType = typesStack.pop()
-    if leftType == resultType:
+    if Cube[Operations.Assign, resultType, leftType] >= 0:
         newQuad(quadruples, operation, left, None, result)
         quadCounter += 1
 
@@ -665,11 +667,17 @@ def p_SEM_GEN_ERA(p):
     '''SEM_GEN_ERA : empty'''
     global paramCounter, quadCounter, currentFunction
     paramCounter = 0
-    ints = functionDirectory[currentFunction]['int']
-    decimals = functionDirectory[currentFunction]['decimal']
-    bools = functionDirectory[currentFunction]['bool']
+    ints = localVarCount[currentFunction]['int'] - AddressStart.Local.Int
+    decimals = localVarCount[currentFunction]['decimal'] - AddressStart.Local.Decimal
+    bools = localVarCount[currentFunction]['bool'] - AddressStart.Local.Bool
+    #print("Temps de ", currentFunction, tempVarCount[currentFunction]['int'], tempVarCount[currentFunction]['decimal'], tempVarCount[currentFunction]['bool'])
+    # tempInts = tempVarCount[currentFunction]['int'] - AddressStart.Temp.Int
+    # tempDecs = tempVarCount[currentFunction]['decimal'] - AddressStart.Temp.Decimal
+    # tempBools = tempVarCount[currentFunction]['bool'] - AddressStart.Temp.Bool
     newQuad(quadruples, Operations.Era, ints, decimals, bools)
-    quadCounter += 1
+    newQuad(quadruples, Operations.Era, currentFunction, None, None)
+    eraStack.append(quadCounter+1)
+    quadCounter += 2
 
 def p_SEM_MATCH_PARAM(p):
     '''SEM_MATCH_PARAM : empty'''
@@ -682,7 +690,7 @@ def p_SEM_MATCH_PARAM(p):
             print("Argument sent does not match expected type. Sent {}, expected {}".format(argumentType, paramType))
             exit(1)
         else:
-            newQuad(quadruples, Operations.Param, argument, None, paramCounter)
+            newQuad(quadruples, Operations.Param, argument, getTypeFromCode(argumentType), paramCounter)
             quadCounter += 1
             paramCounter += 1
 
@@ -695,8 +703,22 @@ def p_SEM_VERIFY_NUM_PARAMS(p):
 def p_SEM_GEN_GOSUB(p):
     '''SEM_GEN_GOSUB : empty'''
     global quadCounter
-    newQuad(quadruples, Operations.GoSub, currentFunction, None, None)
+    newQuad(quadruples, Operations.GoSub, currentFunction, None, functionDirectory[currentFunction]['quadStart'])
     quadCounter += 1
+
+def p_SEM_GEN_GOSUB_ASSIGN(p):
+    '''SEM_GEN_GOSUB_ASSIGN : empty'''
+    global quadCounter
+    newQuad(quadruples, Operations.GoSub, currentFunction, None, functionDirectory[currentFunction]['quadStart'])
+    quadCounter += 1
+    globalFuncVarAddress = functionDirectory['global']['varTable'][currentFunction]['address']
+    returnType = functionDirectory['global']['varTable'][currentFunction]['type']
+    # Temporal assignment of global variable of that func name
+    newQuad(quadruples, Operations.Assign, globalFuncVarAddress, None, tempVarCount[currentScope][getTypeFromCode(returnType)])
+    quadCounter += 1
+    operandStack.append(tempVarCount[currentScope][getTypeFromCode(returnType)])
+    typesStack.append(returnType)
+    tempVarCount[currentScope][getTypeFromCode(returnType)] += 1
 
 def p_SEM_RETURN(p):
     '''SEM_RETURN : empty'''
@@ -707,16 +729,26 @@ def p_SEM_RETURN(p):
     if funcType != returnType:
         print("Function should return {} type".format(funcType))
     else:
-        newQuad(quadruples, Operations.Return, None, None, returnValue)
-        quadCounter += 1
-        operandStack.append(returnValue)
-        typesStack.append(returnType)
         # Create global variable for function return
-        functionDirectory['global']['varTable'][currentScope] =  {'type' : returnType, 'address' : 0} 
-        functionDirectory['global']['numVars'] += 1 
-        functionDirectory['global'][getTypeFromCode(returnType)] += 1
-        functionDirectory['global']['varTable'][currentScope]['address'] = globalVarCount[getTypeFromCode(returnType)]
-        globalVarCount[getTypeFromCode(returnType)] += 1
+        if not functionDirectory['global']['varTable'].has_key(currentScope):
+            functionDirectory['global']['varTable'][currentScope] =  {'type' : returnType, 'address' : 0} 
+            # functionDirectory['global']['numVars'] += 1 
+            # functionDirectory['global'][getTypeFromCode(returnType)] += 1
+            functionDirectory['global']['varTable'][currentScope]['address'] = globalVarCount[getTypeFromCode(returnType)]
+            globalVarCount[getTypeFromCode(returnType)] += 1
+        
+        varAddress = functionDirectory['global']['varTable'][currentScope]['address']
+        # Create quad
+        newQuad(quadruples, Operations.Return, returnValue, None, varAddress)
+        newQuad(quadruples, Operations.EndProc, None, None, None)
+        quadCounter += 2
+        # Create temporal assignment
+        # newQuad(quadruples, Operations.Assign, globalVarCount[getTypeFromCode(returnType)]-1, None, tempVarCount['global'][getTypeFromCode(returnType)])
+        # quadCounter += 2
+        # operandStack.append(tempVarCount['global'][getTypeFromCode(returnType)])
+        # typesStack.append(returnType)
+        # tempVarCount['global'][getTypeFromCode(returnType)] += 1
+        
 
 def p_SEM_PROGRAM_END(p):
     '''SEM_PROGRAM_END : empty'''
@@ -739,11 +771,17 @@ def p_SEM_PROGRAM_END(p):
     quadruples[1]['right'] = tempDecs
     quadruples[1]['result'] = tempBools
 
-
-
-
-
-
+def p_SEM_FILL_ERAS(p):
+    '''SEM_FILL_ERAS : empty'''
+    while eraStack[-1:]:
+        quadNum = eraStack.pop()
+        funcName = quadruples[quadNum]['left']
+        tempInts = tempVarCount[funcName]['int'] - AddressStart.Temp.Int
+        tempDecs = tempVarCount[funcName]['decimal'] - AddressStart.Temp.Decimal
+        tempBools = tempVarCount[funcName]['bool'] - AddressStart.Temp.Bool
+        quadruples[quadNum]['left'] = tempInts
+        quadruples[quadNum]['right'] = tempDecs
+        quadruples[quadNum]['result'] = tempBools
 
 
 
@@ -753,7 +791,7 @@ def p_SEM_PROGRAM_END(p):
 # Building the parser with a test
 import ply.yacc as yacc
 
-filename = "test6.txt"
+filename = "testFinal.txt"
 
 parser = yacc.yacc()
 

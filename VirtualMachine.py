@@ -6,6 +6,12 @@ from fastnumbers import fast_real
 
 currentPointer = 0
 currentScope = 'global'
+functionCount = 0
+lastPointer = 0
+scopeStack = []
+pointerStack = []
+
+
 
 # MEMORY
 memory = {}
@@ -50,14 +56,46 @@ def activateGlobalMem(varQuad, tempQuad):
   for x in range(0, int(tempBool)):
     memory['global']['temp']['bool'].append(False)
   
+def activateLocalMem(varQuad, tempQuad):
+  #print(varQuad, tempQuad)
+  varInt = varQuad['left']
+  varDec = varQuad['right']
+  varBool = varQuad['result']
+  tempInt = tempQuad['left']
+  tempDec = tempQuad['right']
+  tempBool = tempQuad['result']
+  #print("Memory val:", varInt, varDec, varBool, tempInt, tempDec, tempBool)
 
+
+  # Create memory 
+  memory['local'][str(functionCount)] = {}
+  memory['local'][str(functionCount)]['var'] = {}
+  memory['local'][str(functionCount)]['temp'] = {}
+  memory['local'][str(functionCount)]['var']['int'] = []
+  memory['local'][str(functionCount)]['var']['decimal'] = []
+  memory['local'][str(functionCount)]['var']['bool'] = []
+  memory['local'][str(functionCount)]['temp']['int'] = []
+  memory['local'][str(functionCount)]['temp']['decimal'] = []
+  memory['local'][str(functionCount)]['temp']['bool'] = []
+
+  # Initialize spaces
+  for x in range(0, int(varInt)):
+    memory['local'][str(functionCount)]['var']['int'].append(0)
   
+  for x in range(0, int(tempInt)):
+    memory['local'][str(functionCount)]['temp']['int'].append(0)
 
-# quadruple = {'operation' : '100', 'left' : '5,11', 'right': '2,5', 'result' : '1,1'}
-# activateGlobalMem(quadruple)
+  for x in range(0, int(varDec)):
+    memory['local'][str(functionCount)]['var']['decimal'].append(0)
 
-# pprint(memory)
+  for x in range(0, int(tempDec)):
+    memory['local'][str(functionCount)]['temp']['decimal'].append(0)
 
+  for x in range(0, int(varBool)):
+    memory['local'][str(functionCount)]['var']['bool'].append(False)
+  
+  for x in range(0, int(tempBool)):
+    memory['local'][str(functionCount)]['temp']['bool'].append(False)
 
 
 
@@ -207,9 +245,15 @@ def writeValueInMemory(address, value):
     memory['global']['var']['int'][realAddress] = value
     return
 
+def writeArgInMemory(argType, argNum, value):
+  numAddress = int(argNum)
+  memory['local'][str(functionCount-1)]['var'][argType][numAddress] = value
+
+def clearMemory(scope):
+  memory['local'][scope].clear()
 
 def execute(quadruples):
-  global currentPointer
+  global currentPointer, functionCount, currentScope, lastPointer
   # print(currentPointer)
   # print("Starting execution")
   while currentPointer < len(quadruples):
@@ -379,6 +423,42 @@ def execute(quadruples):
       activateGlobalMem(current, secondEra)
       # Move two quads
       currentPointer += 2
+    elif current['operation'] == Operations.Era:
+      # Get second (temporal) era
+      secondEra = quadruples[currentPointer+1]
+      # Activate local mem
+      activateLocalMem(current, secondEra)
+      # Add to function counter
+      functionCount += 1
+      # Move pointer 2 quads
+      currentPointer += 2
+    elif current['operation'] == Operations.Param:
+      argument = extractValue(current['left'])
+      argumentType = current['right']
+      writeArgInMemory(argumentType, current['result'], argument)
+      currentPointer += 1
+    elif current['operation'] == Operations.GoSub:
+      pointerStack.append(currentPointer+1)
+      scopeStack.append(currentScope)
+      nextQuad = current['result']
+      currentPointer = nextQuad
+      currentScope = str(functionCount-1)
+    elif current['operation'] == Operations.EndProc:
+      currentPointer = pointerStack.pop()
+      clearMemory(currentScope)
+      currentScope = scopeStack.pop()
+    elif current['operation'] == Operations.Return:
+      value = extractValue(current['left'])
+      # scope = currentScope
+      # currentScope = 'global'
+      writeValueInMemory(current['result'], value)
+      # Do assign to temp
+      # secondQuad = quadruples[currentPointer+1]
+      # value = extractValue(secondQuad['left'])
+      # writeValueInMemory(secondQuad['result'], value)
+      # Return scope to normal
+      # currentScope = scope
+      currentPointer += 1
     elif current['operation'] == Operations.End:
       # End the program
       exit(1)
