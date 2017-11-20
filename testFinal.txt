@@ -9,6 +9,22 @@ function int fibo(int x) {
   return fibo(x-1) + fibo(x-2);
 }
 
+function int fiboI(int x) {
+  var int fib, prev, i, aux;
+  fib = 1; prev = 0; i = 1; aux = 0;
+  if (x == 0) {
+    return 0;
+  }
+  while (i < x) {
+    aux = fib;
+    fib = fib + prev;
+    prev = aux;
+    i = i + 1;
+  }
+  return fib;
+}
+
 program mvTest1{
-  print(fibo(4));
+  print(fibo(5));
+  print(fiboI(5));
 }
