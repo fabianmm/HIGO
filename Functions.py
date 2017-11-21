@@ -65,6 +65,14 @@ def getTypeFromCode(typeCode):
   if typeCode == Types.Bool:
     return "bool"
 
+def getListTypeFromCode(typeCode):
+  if typeCode == Types.Int:
+    return "listint"
+  if typeCode == Types.Decimal:
+    return "listdec"
+  if typeCode == Types.Bool:
+    return "listbool"
+
 def generateQuad(operationStack, operandStack, typesStack, temporalCounter, quadCounter):
   operation = operationStack.pop()
   term2 = operandStack.pop()

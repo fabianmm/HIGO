@@ -10,10 +10,16 @@ class AddressStart:
     Int = 10000
     Decimal = 11000
     Bool = 12000
+    ListInt = 15000
+    ListDec = 16000
+    ListBool = 17000
   class Local:
     Int = 20000
     Decimal = 21000
     Bool = 22000
+    ListInt = 25000
+    ListDec = 26000
+    ListBool = 27000
   class Temp:
     Int = 30000
     Decimal = 31000
@@ -50,3 +56,6 @@ class Operations:
   Return = 30
   GlobalEra = 40
   End = 50
+  Advance = 60
+  Add = 61
+  Remove = 62

@@ -1,24 +1,13 @@
-var decimal numerouno, numerodos;
-function int suma(bool uno, int dos)
-{
-    var decimal resultado;
-    resultado = uno + dos;
-    return resultado;
-}
-function decimal resta(decimal uno, decimal tres) {
-    var decimal resultado;
-    resultado = uno - tres;
-    return resultado;
-}
-program calculadora {
-    numerouno = 5;
-    numerodos = 10;
-    if (numerouno < numerodos)
-    {
-        print(suma(numerouno, numerodos));
+var int i;
+list int milista;
+program patito {
+    i = 0;
+    while(i < 5) {
+        milista.add(0);
+        milista[i] = i;
+        i = i + 1;
+        print(milista);
     }
-    else 
-    {
-        print("feos");
-    }
+    milista[2].remove;
+    print(milista);
 }

@@ -29,6 +29,9 @@ globalVarCount = {}
 globalVarCount['int'] = AddressStart.Global.Int
 globalVarCount['decimal'] = AddressStart.Global.Decimal
 globalVarCount['bool'] = AddressStart.Global.Bool
+globalVarCount['listint'] = AddressStart.Global.ListInt
+globalVarCount['listdec'] = AddressStart.Global.ListDec
+globalVarCount['listbool'] = AddressStart.Global.ListBool
 
 localVarCount = {}
 
@@ -63,6 +66,10 @@ reserved = {
     'if' : 'if',
     'else' : 'else',
     'while' : 'while',
+
+    # Lists
+    'add' : 'add',
+    'remove' : 'remove',
 }
 
 tokens = [
@@ -81,7 +88,7 @@ tokens = [
     'gt', 'ge', 'lt', 'le', 'ee', 'ne',
 
     # Others
-    'semicolon', 'comma',
+    'semicolon', 'comma', 'dot',
     'lk', 'rk',
     'lb', 'rb',
     'lp', 'rp',
@@ -109,6 +116,7 @@ t_lb = r'\['
 t_rb = r'\]'
 t_lp = r'\('
 t_rp = r'\)'
+t_dot = r'\.'
 t_c_string = r'\"[^\"]*\"'
 
 def t_c_decimal(t):
@@ -170,7 +178,11 @@ def p_VARIDS(p):
               | id SEM_ADD_VAR comma VARIDS'''
 
 def p_LISTDEC(p):
-    '''LISTDEC : list TYPE VARIDS semicolon'''
+    '''LISTDEC : list TYPE LISTIDS semicolon'''
+
+def p_LISTIDS(p):
+    '''LISTIDS : id SEM_ADD_LIST
+               | id SEM_ADD_LIST comma LISTIDS'''
 
 def p_TYPE(p):
     '''TYPE : int SEM_STORE_TYPE
@@ -207,13 +219,15 @@ def p_STATEMENT(p):
                  | FUNCCALL
                  | CONDITION
                  | LOOP 
-                 | RETURN'''
+                 | RETURN
+                 | LISTADD
+                 | LISTREMOVE'''
 
 def p_ASSIGN(p):
     '''ASSIGN : id SEM_PUSH_OPERAND LISTINDEX equal SEM_PUSH_OPERATOR EXPRESSION SEM_ASSIGN semicolon'''
 
 def p_LISTINDEX(p):
-    '''LISTINDEX : lb EXP rb LISTINDEX
+    '''LISTINDEX : lb EXP rb SEM_LIST_INDEX
                  | empty'''
 
 def p_READ(p):
@@ -289,6 +303,12 @@ def p_CONSTANT(p):
                 | false SEM_PUSH_CONSTANT
                 | true SEM_PUSH_CONSTANT'''
 
+def p_LISTADD(p):
+    '''LISTADD : id SEM_PUSH_OPERAND dot add lp EXP rp SEM_ADD_TO_LIST semicolon'''
+
+def p_LISTREMOVE(p):
+    '''LISTREMOVE : id SEM_PUSH_OPERAND LISTINDEX dot remove semicolon SEM_REMOVE_FROM_LIST'''
+
 def p_empty(p):
     'empty :'
     pass
@@ -307,8 +327,9 @@ def p_SEM_CODE_STARTS(p):
     functionDirectory[currentScope] = { 'type' : currentType, 'varTable' : {}}
     newQuad(quadruples, Operations.GlobalEra, None, None, None)
     newQuad(quadruples, Operations.GlobalEra, None, None, None)
+    newQuad(quadruples, Operations.GlobalEra, None, None, None)
     newQuad(quadruples, Operations.Goto, None, None, None)
-    quadCounter += 3
+    quadCounter += 4
     tempVarCount[currentScope] = {}
     tempVarCount[currentScope]['int'] = AddressStart.Temp.Int
     tempVarCount[currentScope]['decimal'] = AddressStart.Temp.Decimal
@@ -321,7 +342,7 @@ def p_SEM_PROGRAM_STARTS(p):
     currentScope = 'global'
     currentType = Types.Void
     # Fill initial Goto to main
-    fill(2, quadCounter, quadruples)
+    fill(3, quadCounter, quadruples)
 
 def p_SEM_STORE_TYPE(p):
     '''SEM_STORE_TYPE : empty'''
@@ -389,8 +410,8 @@ def p_SEM_ADD_VAR(p):
         exit(1)
     else:
         functionDirectory[currentScope]['varTable'][varName] = {'type' : currentType, 'address' : 0}   
-        functionDirectory[currentScope]['numVars'] += 1 
-        functionDirectory[currentScope][getTypeFromCode(currentType)] += 1
+        # functionDirectory[currentScope]['numVars'] += 1 
+        # functionDirectory[currentScope][getTypeFromCode(currentType)] += 1
         if currentScope == 'global':
             functionDirectory[currentScope]['varTable'][varName]['address'] = globalVarCount[getTypeFromCode(currentType)]
             globalVarCount[getTypeFromCode(currentType)] += 1
@@ -402,7 +423,7 @@ def p_SEM_PUSH_OPERAND(p):
     '''SEM_PUSH_OPERAND : empty'''
     operand = p[-1]
     #operandStack.append(operand)
-    # print("Push '%s' to operand stack" % operand)
+    # print("Push '%s' to operand stack" % operand)
 
     if functionDirectory[currentScope]['varTable'].has_key(operand):
         t = functionDirectory[currentScope]['varTable'][operand]['type']
@@ -770,6 +791,13 @@ def p_SEM_PROGRAM_END(p):
     quadruples[1]['left'] = tempInts
     quadruples[1]['right'] = tempDecs
     quadruples[1]['result'] = tempBools
+    # Get global list counts and fill third era
+    listInts = globalVarCount['listint'] - AddressStart.Global.ListInt
+    listdecs = globalVarCount['listdec'] - AddressStart.Global.ListDec
+    listBools = globalVarCount['listbool'] - AddressStart.Global.ListBool
+    quadruples[2]['left'] = listInts
+    quadruples[2]['right'] = listdecs
+    quadruples[2]['result'] = listBools
 
 def p_SEM_FILL_ERAS(p):
     '''SEM_FILL_ERAS : empty'''
@@ -783,10 +811,72 @@ def p_SEM_FILL_ERAS(p):
         quadruples[quadNum]['right'] = tempDecs
         quadruples[quadNum]['result'] = tempBools
 
+# LISTS
+def p_SEM_ADD_LIST(p):
+    '''SEM_ADD_LIST : empty'''
+    listName = p[-1]
+    # Check if it already exists
+    if functionDirectory['global']['varTable'].has_key(listName) or functionDirectory[currentScope]['varTable'].has_key(listName):
+        print("List '{}' has already been declared".format(listName))
+        exit(1)
+    else:
+        # Add list name to varTable
+        functionDirectory[currentScope]['varTable'][listName] = {'type' : currentType, 'address' : 0}   
+        # functionDirectory[currentScope]['numVars'] += 1 
+        # functionDirectory[currentScope][getListTypeFromCode(currentType)] += 1
+        # Update address and counts
+        if currentScope == 'global':
+            functionDirectory[currentScope]['varTable'][listName]['address'] = globalVarCount[getListTypeFromCode(currentType)]
+            globalVarCount[getListTypeFromCode(currentType)] += 1
+        else:
+            functionDirectory[currentScope]['varTable'][listName]['address'] = localVarCount[currentScope][getListTypeFromCode(currentType)]
+            localVarCount[currentScope][getListTypeFromCode(currentType)] += 1
 
+def p_SEM_LIST_INDEX(p):
+    '''SEM_LIST_INDEX : empty'''
+    # Get list id and index exp
+    global quadCounter
+    # printStacks(operatorStack, operandStack, typesStack)
+    # printQuads(quadruples)
+    index = operandStack.pop()
+    indexType = typesStack.pop()
+    listId = operandStack.pop()
+    listType = typesStack.pop()
+    
+    if indexType != Types.Int:
+        print("List index {} needs to be an integer".format(index))
+        exit(1)
+    else:
+    #   
+        operandStack.append("&" + str(listId) + ',' + str(index))
+        # newQuad(quadruples, Operations.Advance, listId, index, tempVarCount[currentScope]['int'])
+        # operandStack.append("&" + str(tempVarCount[currentScope]['int']))
+        typesStack.append(listType)
+        # quadCounter += 1
+        # tempVarCount[currentScope]['int'] += 1
 
+def p_SEM_ADD_TO_LIST(p):
+    '''SEM_ADD_TO_LIST : empty'''
+    # Check exp to add is of the same type as list
+    global quadCounter
+    value = operandStack.pop()
+    valueType = typesStack.pop()
+    listId = operandStack.pop()
+    listType = typesStack.pop()
+    if Cube[Operations.Assign, listType, valueType] >= 0:
+        newQuad(quadruples, Operations.Add, value, None, listId)
+        quadCounter += 1
+    else:
+        print("Cannot add {} to list {}".format(value, listId))
+        exit(1)
 
-
+def p_SEM_REMOVE_FROM_LIST(p):
+    '''SEM_REMOVE_FROM_LIST : empty'''
+    global quadCounter
+    listAddress = operandStack.pop()
+    listType = typesStack.pop()
+    newQuad(quadruples, Operations.Remove, None, None, listAddress)
+    quadCounter += 1
 
 # Building the parser with a test
 import ply.yacc as yacc
@@ -813,7 +903,7 @@ with open(filename, 'r') as f:
     input = f.read()
     print(parser.parse(input, lexer=lexer))
 
-# printQuads(quadruples)
+printQuads(quadruples)
 
 # Exectue virtual machine
 execute(quadruples)
