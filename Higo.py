@@ -122,7 +122,7 @@ t_rb = r'\]'
 t_lp = r'\('
 t_rp = r'\)'
 t_dot = r'\.'
-t_c_string = r'\"[^\"]*\"'
+t_c_string = r'[\'\"][^\'^\"]*[\'\"]'
 
 def t_c_decimal(t):
     r'[0-9]+\.[0-9]+([Ee][\+-]?[0-9]+)?'
@@ -456,7 +456,7 @@ def p_SEM_PUSH_CONSTANT(p):
         if currentSign != None:
             print("Cannot precede a string constant with a sign.")
             exit(1)
-        newOperand = "#" + operand.strip("\"",)
+        newOperand = "#" + operand.strip("\"").strip("\'")
         operandStack.append(newOperand) 
         typesStack.append(Types.String)
 
@@ -972,7 +972,7 @@ def p_SEM_LIST_FIND(p):
 # Building the parser with a test
 import ply.yacc as yacc
 
-filename = "test2.txt"
+filename = "./Tests/test2.txt"
 
 # parser = yacc.yacc()
 

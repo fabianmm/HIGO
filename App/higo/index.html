@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Higo</title>
+  <script src="blockly_compressed.js"></script>
+  <script src="blocks_compressed.js"></script>
+  <script src="en.js"></script>
+  <script src="javascript_compressed.js"></script>
+  <script src="customblocks.js"></script>
+  <script src="higo.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+  <h1>HIGO</h1>
+  <button onclick="showCode()"> Create File </button>
+  <a download="program.txt" id="downloadlink" style="display: none">Download</a>
+  <div id="blocklyDiv" style="height: 500px; width: 100%;"></div>
+
+  <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+    <category name="Statements" colour="#a5805b">
+      <block type="program">
+        <field name="NAME">name</field>
+      </block>
+      <block type="assign">
+        <field name="VARNAME">variable</field>
+      </block>
+      <block type="print"></block>
+      <block type="read">
+        <field name="VARNAME">variable</field>
+      </block>
+    </category>
+    <category name="Expressions" colour="#5b5ba5">
+      <block type="number">
+        <field name="NUM">0</field>
+      </block>
+      <block type="arith_operation">
+        <field name="OP">PLUS</field>
+      </block>
+      <block type="rel_op">
+        <field name="OP">GT</field>
+      </block>
+      <block type="bool_op">
+        <field name="OP">AND</field>
+      </block>
+      <block type="not"></block>
+    </category>
+    <category name="Conditions and Loops" colour="#a55b93">
+      <block type="if"></block>
+      <block type="if_else"></block>
+      <block type="while"></block>
+    </category>
+    <category name="Variables and Names" colour="#5ba593">
+      <block type="var_dec">
+        <field name="TYPE">INT</field>
+      </block>
+      <block type="single_name">
+        <field name="NAME">name</field>
+      </block>
+      <block type="multiple_names"></block>
+      <block type="text">
+        <field name="TEXT"></field>
+      </block>
+    </category>
+    <category name="Functions" colour="#80a55b">
+      <block type="function_dec">
+        <field name="FUNCNAME">name</field>
+      </block>
+      <block type="function_dec_return">
+        <field name="TYPE">INT</field>
+        <field name="FUNCNAME">name</field>
+      </block>
+      <block type="if_return"></block>
+      <block type="void_func_call">
+        <field name="FUNCNAME">function</field>
+      </block>
+      <block type="func_call_value">
+        <field name="FUNCNAME">function</field>
+      </block>
+    </category>
+    <category name="Lists" colour="#a55b5b">
+      <block type="list_dec">
+        <field name="TYPE">int</field>
+      </block>
+      <block type="list_add">
+        <field name="listname">list</field>
+      </block>
+      <block type="list_item">
+        <field name="listname">list</field>
+      </block>
+      <block type="list_find">
+        <field name="listname">list</field>
+      </block>
+      <block type="list_remove"></block>
+      <block type="list_sort"></block>
+    </category>
+  </xml>
+
+  <script>
+    var workspace = Blockly.inject('blocklyDiv',
+    { 
+      toolbox : document.getElementById('toolbox'), 
+      collapse : true, 
+      comments : true, 
+      disable : true, 
+      maxBlocks : Infinity, 
+      trashcan : true, 
+      horizontalLayout : false, 
+      toolboxPosition : 'start', 
+      css : true, 
+      media : 'https://blockly-demo.appspot.com/static/media/', 
+      rtl : false, 
+      scrollbars : true, 
+      sounds : true, 
+      oneBasedIndex : true, 
+      grid : {
+        spacing : 20, 
+        length : 1, 
+        colour : '#888', 
+        snap : true
+      }});
+    
+    var textFile = null;
+
+    function showCode() {
+      // Generate JavaScript code and display it.
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      alert(code);
+      
+      // var data = new Blob([code], {type: 'text/plain'});
+
+      // // If we are replacing a previously generated file we need to
+      // // manually revoke the object URL to avoid memory leaks.
+      // if (textFile !== null) {
+      //   window.URL.revokeObjectURL(textFile);
+      // }
+
+      // textFile = window.URL.createObjectURL(data);
+
+      var a = document.getElementById("downloadlink");
+      var file = new Blob([code], {type: 'text/plain'});
+      a.href = URL.createObjectURL(file);
+      a.download = "program.txt";
+      a.style.display = 'block';
+      return textFile;
+    }
+
+    // function runCode() {
+    //   // Generate JavaScript code and run it.
+    //   window.LoopTrap = 1000;
+    //   Blockly.JavaScript.INFINITE_LOOP_TRAP =
+    //       'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+    //   var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+    //   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+    //   try {
+    //     eval(code);
+    //   } catch (e) {
+    //     alert(e);
+    //   }
+    // }
+  </script>
+</body>
+</html>

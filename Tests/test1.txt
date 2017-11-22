@@ -26,4 +26,3 @@ program patito {
     print("numeros en orden");
     print(numeros);
 }
-
