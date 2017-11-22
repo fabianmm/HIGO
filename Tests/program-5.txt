@@ -1,0 +1,7 @@
+var int uno;
+var int dos;
+program suma{
+  uno = 5;
+  dos = 10;
+  print((uno + dos));
+}

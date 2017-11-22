@@ -6,6 +6,7 @@ from Functions import *
 from pprint import pprint
 from VirtualMachine import *
 
+filename = "./Tests/program-5.txt"
 
 # Variables
 functionDirectory = {}  # { functionName : { functionType, {varTable} }
@@ -972,7 +973,7 @@ def p_SEM_LIST_FIND(p):
 # Building the parser with a test
 import ply.yacc as yacc
 
-filename = "./Tests/test3.txt"
+
 
 yacc.yacc()
 
@@ -992,7 +993,7 @@ with open(filename, 'r') as f:
     if (yacc.parse(input, tracking = True) == 'OK'):
         print(dirProc)
 
-printQuads(quadruples)
+# printQuads(quadruples)
 
 # Exectue virtual machine
 execute(quadruples)

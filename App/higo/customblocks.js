@@ -9,15 +9,15 @@ Blockly.defineBlocksWithJsonArray([{
         "options": [
           [
             "int",
-            "INT"
+            "int"
           ],
           [
             "decimal",
-            "DECIMAL"
+            "decimal"
           ],
           [
             "bool",
-            "BOOL"
+            "bool"
           ]
         ]
       },
@@ -273,11 +273,11 @@ Blockly.defineBlocksWithJsonArray([{
         "options": [
           [
             "and",
-            "AND"
+            "and"
           ],
           [
             "or",
-            "OR"
+            "or"
           ]
         ]
       },

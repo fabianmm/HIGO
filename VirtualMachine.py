@@ -658,7 +658,9 @@ def execute(quadruples):
       # Get both values and divide
       left = extractValueFromAddress(current['left'])
       right = extractValueFromAddress(current['right'])
-      # print(left, "/", right)
+      if right == 0:
+        print("Cannot divide by 0")
+        exit(1)
       result = left / right
       # Write result in memory
       writeValueInMemory(current['result'], result)
@@ -833,9 +835,6 @@ def execute(quadruples):
       currentPointer += 1
     elif current['operation'] == Operations.Remove:
       value = current['result']
-      # address = value[1:]
-      # kind, datatype, realAddress = deconstructAddress(address)
-      # address = retrieve(currentScope, currentScope, kind, datatype, realAddress)
       removeFromList(value)
       currentPointer += 1
     elif current['operation'] == Operations.Sort:
