@@ -972,9 +972,7 @@ def p_SEM_LIST_FIND(p):
 # Building the parser with a test
 import ply.yacc as yacc
 
-filename = "./Tests/test2.txt"
-
-# parser = yacc.yacc()
+filename = "./Tests/test3.txt"
 
 yacc.yacc()
 
@@ -988,13 +986,6 @@ def printTokens():
             if not tok:
                 break
             print(tok)
-
-# printTokens()
-
-# Parse
-# with open(filename, 'r') as f:
-#     input = f.read()
-#     print(parser.parse(input, lexer=lexer))
 
 with open(filename, 'r') as f:
     input = f.read()

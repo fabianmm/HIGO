@@ -193,7 +193,7 @@ Blockly.JavaScript['func_call_value'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
   var code = text_funcname + '(' + value_params + ')';
   // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Blockly.JavaScript.ORDER_NONE];
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
 Blockly.JavaScript['not'] = function(block) {
@@ -275,4 +275,13 @@ Blockly.JavaScript['list_sort'] = function(block) {
   // TODO: Assemble JavaScript into code variable.
   var code = value_value + '.sort;\n';
   return code;
+};
+
+Blockly.JavaScript['parameter'] = function(block) {
+  var dropdown_type = block.getFieldValue('type');
+  var value_param = Blockly.JavaScript.valueToCode(block, 'param', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = dropdown_type + ' ' + value_param;
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };

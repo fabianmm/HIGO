@@ -1,314 +1,3 @@
-// Blockly.Blocks['var_dec'] = {
-//     init: function() {
-//       this.appendValueInput("var")
-//           .setCheck(null)
-//           .appendField("var")
-//           .appendField(new Blockly.FieldDropdown([["int","INT"], ["decimal","DECIMAL"], ["bool","BOOL"]]), "TYPE");
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(90);
-//    this.setTooltip("var");
-//    this.setHelpUrl("var");
-//     }
-//   };
-  
-//   Blockly.Blocks['single_name'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldTextInput("name"), "NAME");
-//       this.setOutput(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['multiple_names'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldTextInput("name"), "NAME1")
-//           .appendField(",")
-//           .appendField(new Blockly.FieldTextInput("name"), "NAME2");
-//       this.setOutput(true, null);
-//       this.setColour(195);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['program'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField("program")
-//           .appendField(new Blockly.FieldTextInput("name"), "NAME");
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(300);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['function_dec'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField("function void")
-//           .appendField(new Blockly.FieldTextInput("name"), "FUNCNAME")
-//           .appendField("(");
-//       this.appendValueInput("PARAMS")
-//           .setCheck(null);
-//       this.appendDummyInput()
-//           .appendField(")");
-//       this.appendStatementInput("STATEMENTS")
-//           .setCheck(null);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['assign'] = {
-//     init: function() {
-//       this.appendValueInput("VALUE")
-//           .setCheck(null)
-//           .appendField(new Blockly.FieldTextInput("variable"), "VARNAME")
-//           .appendField("=");
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['number'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldNumber(0), "NUM");
-//       this.setOutput(true, "Number");
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['arith_operation'] = {
-//     init: function() {
-//       this.appendValueInput("A")
-//           .setCheck("Number");
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldDropdown([["+","PLUS"], ["-","MINUS"], ["*","TIMES"], ["/","DIVIDE"]]), "OP");
-//       this.appendValueInput("B")
-//           .setCheck("Number");
-//       this.setInputsInline(true);
-//       this.setOutput(true, "Number");
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['rel_op'] = {
-//     init: function() {
-//       this.appendValueInput("A")
-//           .setCheck("Number");
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldDropdown([[">","GT"], ["<","LT"], [">=","GE"], ["<=","LE"], ["==","EE"], ["!=","NE"]]), "OP");
-//       this.appendValueInput("B")
-//           .setCheck("Number");
-//       this.setInputsInline(true);
-//       this.setOutput(true, "Boolean");
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['bool_op'] = {
-//     init: function() {
-//       this.appendValueInput("A")
-//           .setCheck("Boolean");
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldDropdown([["and","AND"], ["or","OR"]]), "OP");
-//       this.appendValueInput("B")
-//           .setCheck("Boolean");
-//       this.setOutput(true, "Boolean");
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['print'] = {
-//     init: function() {
-//       this.appendValueInput("VALUE")
-//           .setCheck(null)
-//           .appendField("print");
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['read'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField("read to")
-//           .appendField(new Blockly.FieldTextInput("variable"), "VARNAME");
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['if'] = {
-//     init: function() {
-//       this.appendValueInput("EXP")
-//           .setCheck("Boolean")
-//           .appendField("if");
-//       this.appendStatementInput("STATEMENTS")
-//           .setCheck(null);
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['if_else'] = {
-//     init: function() {
-//       this.appendValueInput("EXP")
-//           .setCheck("Boolean")
-//           .appendField("if");
-//       this.appendStatementInput("IF_STATEMENT")
-//           .setCheck(null);
-//       this.appendDummyInput()
-//           .appendField("else");
-//       this.appendStatementInput("ELSE_STATEMENT")
-//           .setCheck(null);
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['while'] = {
-//     init: function() {
-//       this.appendValueInput("EXP")
-//           .setCheck("Boolean")
-//           .appendField("while");
-//       this.appendStatementInput("STATEMENTS")
-//           .setCheck(null);
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['function_dec_return'] = {
-//     init: function() {
-//       this.appendValueInput("NAME")
-//           .setCheck(null)
-//           .appendField("function")
-//           .appendField(new Blockly.FieldDropdown([["int","INT"], ["decimal","DECIMAL"], ["bool","BOOL"]]), "TYPE")
-//           .appendField(new Blockly.FieldTextInput("name"), "FUNCNAME")
-//           .appendField("(");
-//       this.appendDummyInput()
-//           .appendField(")");
-//       this.appendStatementInput("STATEMENTS")
-//           .setCheck(null);
-//       this.appendValueInput("RETURN")
-//           .setCheck(null)
-//           .setAlign(Blockly.ALIGN_RIGHT)
-//           .appendField("return");
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['void_func_call'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldTextInput("function"), "FUNCNAME")
-//           .appendField("(");
-//       this.appendValueInput("PARAMS")
-//           .setCheck(null);
-//       this.appendDummyInput()
-//           .appendField(")");
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['func_call_value'] = {
-//     init: function() {
-//       this.appendDummyInput()
-//           .appendField(new Blockly.FieldTextInput("function"), "FUNCNAME")
-//           .appendField("(");
-//       this.appendValueInput("PARAMS")
-//           .setCheck(null);
-//       this.appendDummyInput()
-//           .appendField(")");
-//       this.setInputsInline(true);
-//       this.setOutput(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-  
-//   Blockly.Blocks['not'] = {
-//     init: function() {
-//       this.appendValueInput("VALUE")
-//           .setCheck("Boolean")
-//           .appendField("not");
-//       this.setInputsInline(true);
-//       this.setOutput(true, "Boolean");
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
-//   Blockly.Blocks['if_return'] = {
-//     init: function() {
-//       this.appendValueInput("EXP")
-//           .setCheck("Boolean")
-//           .appendField("if");
-//       this.appendValueInput("VALUE")
-//           .setCheck(null)
-//           .appendField("return");
-//       this.setInputsInline(true);
-//       this.setPreviousStatement(true, null);
-//       this.setNextStatement(true, null);
-//       this.setColour(230);
-//    this.setTooltip("");
-//    this.setHelpUrl("");
-//     }
-//   };
 
 Blockly.defineBlocksWithJsonArray([{
     "type": "var_dec",
@@ -969,4 +658,61 @@ Blockly.defineBlocksWithJsonArray([{
     "colour": 0,
     "tooltip": "var",
     "helpUrl": "var"
+  },
+  {
+    "type": "parameter_multiple",
+    "message0": "%1 , %2 %3",
+    "args0": [
+      {
+        "type": "input_value",
+        "name": "param",
+        "check": "String"
+      },
+      {
+        "type": "input_dummy"
+      },
+      {
+        "type": "input_value",
+        "name": "NAME"
+      }
+    ],
+    "inputsInline": true,
+    "output": null,
+    "colour": 30,
+    "tooltip": "",
+    "helpUrl": ""
+  },
+  {
+    "type": "parameter",
+    "message0": "%1 %2",
+    "args0": [
+      {
+        "type": "field_dropdown",
+        "name": "type",
+        "options": [
+          [
+            "int",
+            "int"
+          ],
+          [
+            "decimal",
+            "decimal"
+          ],
+          [
+            "bool",
+            "bool"
+          ]
+        ]
+      },
+      {
+        "type": "input_value",
+        "name": "param",
+        "check": "String"
+      }
+    ],
+    "inputsInline": true,
+    "output": null,
+    "colour": 30,
+    "tooltip": "",
+    "helpUrl": ""
   }]);
