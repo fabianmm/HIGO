@@ -441,14 +441,14 @@ def p_SEM_PUSH_CONSTANT(p):
     elif isinstance(operand, float):
         typesStack.append(Types.Decimal)
         if currentSign == '-':
-            operand = '-' + operand
+            operand = -1 * operand
             currentSign = None
         newOperand = "#" + str(operand)
         operandStack.append(newOperand) 
     elif isinstance(operand, int):
         typesStack.append(Types.Int)
         if currentSign == '-':
-            operand = '-' + operand
+            operand = -1 * operand
             currentSign = None
         newOperand = "#" + str(operand)
         operandStack.append(newOperand) 
