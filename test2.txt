@@ -1,18 +1,29 @@
-var int A, B, C, D;
-function void uno()
-{
-  var decimal X, Y, Z;
-  X = A * (B + C) / D;
-  Y = X + X;
-  Z = X * Y;
-  return Z;
-}
-program test{
-  A = 1;
-  B = 2;
-  C = 3;
-  D = 4;
-  B = A + B + C - D * A * B + C;
-  print(uno());
+var int i;
+list int califs, numeros;
 
+function void otraLista() {
+    list decimal lista2;
+    lista2.add(5);
+    lista2.add(10);
+    print(lista2);
 }
+
+program patito {
+    print("califs");
+    i = 0;
+    califs.add(100);
+    califs.add(95);
+    califs.add(80);
+    numeros.add(1);
+    numeros.add(6);
+    califs.add(83);
+    numeros.add(6);
+    numeros.add(5);
+    print(califs);
+    print(numeros);
+    numeros.sort;
+    numeros[1].remove;
+    print("numeros en orden");
+    print(numeros);
+}
+

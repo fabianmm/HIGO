@@ -64,6 +64,8 @@ def getTypeFromCode(typeCode):
     return "decimal"
   if typeCode == Types.Bool:
     return "bool"
+  if typeCode == Types.String:
+    return "string"
 
 def getListTypeFromCode(typeCode):
   if typeCode == Types.Int:

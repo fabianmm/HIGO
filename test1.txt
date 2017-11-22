@@ -1,13 +1,31 @@
 var int i;
 list int milista;
-program patito {
-    i = 0;
-    while(i < 5) {
-        milista.add(0);
-        milista[i] = i;
-        i = i + 1;
-        print(milista);
-    }
-    milista[2].remove;
-    print(milista);
+
+function void otraLista() {
+    list decimal lista2;
+    lista2.add(5);
+    lista2.add(10);
+    print(lista2);
 }
+
+program patito {
+    print("milista");
+    i = 0;
+    milista.add(1);
+    milista.add(4);
+    milista.add(6);
+    milista.add(2);
+    milista.add(5);
+    milista.add(0);
+    print(milista);
+    i = milista.find(5);
+    milista[i].remove;
+    print("milista sin el 5");
+    print(milista);
+    milista.sort;
+    print("milista en orden");
+    print(milista);
+    print("otralista");
+    otraLista();
+}
+

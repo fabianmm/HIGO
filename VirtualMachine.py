@@ -74,7 +74,7 @@ def activateGlobalMem(varQuad, tempQuad, listQuad):
   for x in range(0, int(listBool)):
     memory['global']['list']['bool'].append({'value' : False, 'next' : None, 'prev' : None})
   
-def activateLocalMem(varQuad, tempQuad):
+def activateLocalMem(varQuad, tempQuad, listQuad):
   #print(varQuad, tempQuad)
   varInt = varQuad['left']
   varDec = varQuad['right']
@@ -82,19 +82,28 @@ def activateLocalMem(varQuad, tempQuad):
   tempInt = tempQuad['left']
   tempDec = tempQuad['right']
   tempBool = tempQuad['result']
-  #print("Memory val:", varInt, varDec, varBool, tempInt, tempDec, tempBool)
-
+  listInt = listQuad['left']
+  listDec = listQuad['right']
+  listBool = listQuad['result']
 
   # Create memory 
   memory['local'][str(functionCount)] = {}
   memory['local'][str(functionCount)]['var'] = {}
   memory['local'][str(functionCount)]['temp'] = {}
+  memory['local'][str(functionCount)]['list'] = {}
+  memory['local'][str(functionCount)]['node'] = {}
   memory['local'][str(functionCount)]['var']['int'] = []
   memory['local'][str(functionCount)]['var']['decimal'] = []
   memory['local'][str(functionCount)]['var']['bool'] = []
   memory['local'][str(functionCount)]['temp']['int'] = []
   memory['local'][str(functionCount)]['temp']['decimal'] = []
   memory['local'][str(functionCount)]['temp']['bool'] = []
+  memory['local'][str(functionCount)]['list']['int'] = []
+  memory['local'][str(functionCount)]['list']['decimal'] = []
+  memory['local'][str(functionCount)]['list']['bool'] = []
+  memory['local'][str(functionCount)]['node']['int'] = []
+  memory['local'][str(functionCount)]['node']['decimal'] = []
+  memory['local'][str(functionCount)]['node']['bool'] = []
 
   # Initialize spaces
   for x in range(0, int(varInt)):
@@ -114,6 +123,13 @@ def activateLocalMem(varQuad, tempQuad):
   
   for x in range(0, int(tempBool)):
     memory['local'][str(functionCount)]['temp']['bool'].append(False)
+  
+  for x in range(0, int(listInt)):
+    memory['local'][str(functionCount)]['list']['int'].append({'head' : None, 'tail' : None})
+  for x in range(0, int(listDec)):
+    memory['local'][str(functionCount)]['list']['decimal'].append({'head' : None, 'tail' : None})
+  for x in range(0, int(listBool)):
+    memory['local'][str(functionCount)]['list']['bool'].append({'head' : None, 'tail' : None})
 
 # Gets the value inside an address
 def extractValueFromAddress(address):
@@ -131,35 +147,99 @@ def extractValueFromAddress(address):
       address = address[1:]
       listAddress, index = address.split(',')
       scope, kind, datatype, realListAddress = deconstructAddress(listAddress)
-      listItem = retrieve(currentScope, currentScope, kind, datatype, realListAddress)
+      # Get list Item
+      listItem = retrieve(scope, currentScope, kind, datatype, realListAddress)
+      # Gets the index
       indexValue = extractValueFromAddress(index)
+      # Retrieve from nodes
       node = retrieveFromList(listItem['head'], indexValue, datatype)
       return node['value']
     else:
+      # In case the address got stringified
       address = int(address)
       scope, kind, datatype, realAddress = deconstructAddress(address)
       value = retrieve(scope, currentScope, kind, datatype, realAddress)
       return value
   else:
+    # Normal address
     scope, kind, datatype, realAddress = deconstructAddress(address)
     value = retrieve(scope, currentScope, kind, datatype, realAddress)
     return value
 
-def retrieveFromList(head, index, datatype):
-  if currentScope == 'global':
-    current = memory['global']['node'][datatype][head]
-    i = index
-    while i > 0:
-      nextNode = current['next']
-      if not nextNode:
-        print("Index {} out of bounds".format(index))
-        exit(1)
+def printValue(address):
+  if isinstance(address, str):
+    if address.startswith("#"):
+      # Convert constant
+      convertedValue = fast_real(address[1:])
+      if convertedValue == "false":
+        print(False)
+        return
+      elif convertedValue == "true":
+        print(True)
+        return
+      print(convertedValue)
+      return
+    elif address.startswith("&"):
+      # Get value from pointer
+      address = address[1:]
+      listAddress, index = address.split(',')
+      scope, kind, datatype, realListAddress = deconstructAddress(listAddress)
+      listItem = retrieve(scope, currentScope, kind, datatype, realListAddress)
+      indexValue = extractValueFromAddress(index)
+      node = retrieveFromList(listItem['head'], indexValue, datatype)
+      print(node['value'])
+      return
+    else:
+      address = int(address)
+      scope, kind, datatype, realAddress = deconstructAddress(address)
+      if kind == 'list':
+        printList(datatype, realAddress)
+        return
       else:
-        current = memory['global']['node'][datatype][nextNode]
-        i -= 1
-    return current
+        value = retrieve(scope, currentScope, kind, datatype, realAddress)
+        print(value)
+        return
+  else:
+    scope, kind, datatype, realAddress = deconstructAddress(address)
+    if kind == 'list':
+        printList(datatype, realAddress)
+        return
+    else:
+        value = retrieve(scope, currentScope, kind, datatype, realAddress)
+        print(value)
+        return
 
-def getValueFromMemory(address):
+def retrieveFromList(head, index, datatype):
+  if head != None:
+    if currentScope == 'global':
+      current = memory['global']['node'][datatype][head]
+      i = index
+      while i > 0:
+        nextNode = current['next']
+        if not nextNode:
+          print("Index {} out of bounds".format(index))
+          exit(1)
+        else:
+          current = memory['global']['node'][datatype][nextNode]
+          i -= 1
+      return current
+    else:
+      current = memory['local'][currentScope]['node'][datatype][head]
+      i = index
+      while i > 0:
+        nextNode = current['next']
+        if not nextNode:
+          print("Index {} out of bounds".format(index))
+          exit(1)
+        else:
+          current = memory['local'][currentScope]['node'][datatype][nextNode]
+          i -= 1
+      return current
+  else:
+    print("Out of bounds.")
+    exit(1)
+
+# def getValueFromMemory(address):
   numAddress = int(address)
   realAddress = numAddress - AddressStart.Temp.Bool
   if realAddress >= 0:
@@ -251,6 +331,18 @@ def deconstructAddress(addressStr):
   if realAddress >= 0:
     return currentScope, 'temp', 'int', realAddress
 
+  realAddress = numAddress - AddressStart.Local.ListBool
+  if realAddress >= 0:
+    return currentScope, 'list', 'bool', realAddress
+  
+  realAddress = numAddress - AddressStart.Local.ListDec
+  if realAddress >= 0:
+    return currentScope, 'list', 'decimal', realAddress
+
+  realAddress = numAddress - AddressStart.Local.ListInt
+  if realAddress >= 0:
+    return currentScope, 'list', 'int', realAddress
+
   realAddress = numAddress - AddressStart.Local.Bool
   if realAddress >= 0:
     return currentScope, 'var', 'bool', realAddress
@@ -293,7 +385,7 @@ def writeValueInMemory(address, value):
     address = address[1:]
     listAddress, index = address.split(',')
     scope, kind, datatype, realListAddress = deconstructAddress(listAddress)
-    listItem = retrieve(currentScope, currentScope, kind, datatype, realListAddress)
+    listItem = retrieve(scope, currentScope, kind, datatype, realListAddress)
     indexValue = extractValueFromAddress(index)
     node = retrieveFromList(listItem['head'], indexValue, datatype)
     node['value'] = value
@@ -306,83 +398,6 @@ def writeValueInMemory(address, value):
     memory['global'][kind][datatype][realAddress] = value
   else:
     memory['local'][currentScope][kind][datatype][realAddress] = value
-
-  # realAddress = numAddress - AddressStart.Temp.Bool
-  # if realAddress >= 0:
-  #   if currentScope == 'global':
-  #     memory['global']['temp']['bool'][realAddress] = value
-  #   else:
-  #     memory['local'][currentScope]['temp']['bool'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Temp.Decimal
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   if currentScope == 'global':
-  #     memory['global']['temp']['decimal'][realAddress] = value
-  #   else:
-  #     memory['local'][currentScope]['temp']['decimal'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Temp.Int
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   if currentScope == 'global':
-  #     memory['global']['temp']['int'][realAddress] = value
-  #   else:
-  #     memory['local'][currentScope]['temp']['int'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Local.Bool
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   memory['local'][currentScope]['var']['bool'][realAddress] = value
-  #   return
-  
-  # realAddress = numAddress - AddressStart.Local.Decimal
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   memory['local'][currentScope]['var']['decimal'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Local.Int
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   memory['local'][currentScope]['var']['int'][realAddress] = value
-  #   return
-  
-  # realAddress = numAddress - AddressStart.Global.ListBool
-  # if realAddress >= 0:
-  #   memory['global']['list']['bool'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Global.ListDec
-  # if realAddress >= 0:
-  #   memory['global']['list']['decimal'][realAddress] = value
-  #   return 
-
-  # realAddress = numAddress - AddressStart.Global.ListInt
-  # if realAddress >= 0:
-  #   memory['global']['list']['int'][realAddress] = value
-  #   return 
-
-  # realAddress = numAddress - AddressStart.Global.Bool
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   memory['global']['var']['bool'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Global.Decimal
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   memory['global']['var']['decimal'][realAddress] = value
-  #   return
-
-  # realAddress = numAddress - AddressStart.Global.Int
-  # # print("Real address: ", realAddress)
-  # if realAddress >= 0:
-  #   memory['global']['var']['int'][realAddress] = value
-  #   return
 
 def writeArgInMemory(argType, argNum, value):
   numAddress = int(argNum)
@@ -407,21 +422,107 @@ def addToList(address, value):
       # Update previous node and tail
       memory['global']['node'][datatype][last]['next'] = len(memory['global']['node'][datatype]) - 1
     memory['global']['list'][datatype][listAddress]['tail'] = len(memory['global']['node'][datatype]) - 1
+  else:
+    listItem = memory['local'][currentScope]['list'][datatype][listAddress]
+    if listItem['head'] == None:
+      # list is empty, update head
+      newNode = {'value' : value, 'next' : None, 'prev' : None}
+      memory['local'][currentScope]['node'][datatype].append(newNode)
+      memory['local'][currentScope]['list'][datatype][listAddress]['head'] = len(memory['local'][currentScope]['node'][datatype]) - 1
+    else:
+      last = memory['local'][currentScope]['list'][datatype][listAddress]['tail']
+      newNode = {'value' : value, 'next' : None, 'prev' : last}
+      memory['local'][currentScope]['node'][datatype].append(newNode)
+      # Update previous node and tail
+      memory['local'][currentScope]['node'][datatype][last]['next'] = len(memory['local'][currentScope]['node'][datatype]) - 1
+    memory['local'][currentScope]['list'][datatype][listAddress]['tail'] = len(memory['local'][currentScope]['node'][datatype]) - 1
 
-    # # Advance to last element
-    # while listItem and listItem['next']:
-    #   realAddress = listItem['next']
-    #   listItem = memory['global'][kind][datatype][realAddress]
+def sortList(address):
+  scope, kind, datatype, listAddress = deconstructAddress(address)
+  items = []
+  if scope == 'global':
+    listItem = memory['global']['list'][datatype][listAddress]
+    if listItem['head'] != None:
+      node = memory['global']['node'][datatype][listItem['head']]
+      items.append(node['value'])
+      nextNodeIndex = node['next']
+      while nextNodeIndex != None:
+        node = memory['global']['node'][datatype][nextNodeIndex]
+        items.append(node['value'])
+        nextNodeIndex = node['next']
+      items.sort()
+      # Replace values again
+      node = memory['global']['node'][datatype][listItem['head']]
+      node['value'] = items[0]
+      nextNodeIndex = node['next']
+      i = 1
+      while nextNodeIndex != None:
+        node = memory['global']['node'][datatype][nextNodeIndex]
+        node['value'] = items[i]
+        nextNodeIndex = node['next']
+        i += 1
+  else:
+    listItem = memory['local'][scope]['list'][datatype][listAddress]
+    if listItem['head'] != None:
+      node = memory['local'][scope]['node'][datatype][listItem['head']]
+      items.append(node['value'])
+      nextNodeIndex = node['next']
+      while nextNodeIndex != None:
+        node = memory['local'][scope]['node'][datatype][nextNodeIndex]
+        items.append(node['value'])
+        nextNodeIndex = node['next']
+      items.sort()
+      # Replace values again
+      node = memory['local'][scope]['node'][datatype][listItem['head']]
+      node['value'] = items[0]
+      nextNodeIndex = node['next']
+      i = 1
+      while nextNodeIndex != None:
+        node = memory['local'][scope]['node'][datatype][nextNodeIndex]
+        node['value'] = items[i]
+        nextNodeIndex = node['next']
+        i += 1
 
-    # # Add element and update last's next
-    # memory['global'][kind][datatype].append({'value' : value, 'next' : None, 'prev' : realAddress})
-    # memory['global'][kind][datatype][realAddress]['next'] = len(memory['global'][kind][datatype]) - 1
+def findValueInList(value, address):
+  scope, kind, datatype, listAddress = deconstructAddress(address)
+  if scope == 'global':
+    listItem = memory['global']['list'][datatype][listAddress]
+    if listItem['head'] != None:
+      i = 0
+      node = memory['global']['node'][datatype][listItem['head']]
+      if node['value'] == value:
+        return i
+      nextNodeIndex = node['next']
+      i = 1
+      while nextNodeIndex != None:
+        node = memory['global']['node'][datatype][nextNodeIndex]
+        if node['value'] == value:
+          return i
+        nextNodeIndex = node['next']
+        i += 1
+      return -1
+  else:
+    listItem = memory['local'][currentScope]['list'][datatype][listAddress]
+    if listItem['head'] != None:
+      i = 0
+      node = memory['local'][currentScope]['node'][datatype][listItem['head']]
+      if node['value'] == value:
+        return i
+      nextNodeIndex = node['next']
+      i = 1
+      while nextNodeIndex != None:
+        node = memory['local'][currentScope]['node'][datatype][nextNodeIndex]
+        if node['value'] == value:
+          return i
+        nextNodeIndex = node['next']
+        i += 1
+      return -1
 
 def removeFromList(address):
   address = address[1:]
   listAddress, index = address.split(',')
   scope, kind, datatype, realListAddress = deconstructAddress(listAddress)
-  listItem = retrieve(currentScope, currentScope, kind, datatype, realListAddress)
+  listItem = retrieve(scope, currentScope, kind, datatype, realListAddress)
   indexValue = extractValueFromAddress(index)
   node = retrieveFromList(listItem['head'], indexValue, datatype)
   prevNode = node['prev']
@@ -439,6 +540,11 @@ def removeFromList(address):
       memory['global']['node'][datatype][prevNode]['next'] = nextNode
     if nextNode:
       memory['global']['node'][datatype][nextNode]['prev'] = prevNode
+  else:
+    if prevNode:
+      memory['local'][currentScope]['node'][datatype][prevNode]['next'] = nextNode
+    if nextNode:
+      memory['local'][currentScope]['node'][datatype][nextNode]['prev'] = prevNode
 
 def retrieve(scope, functionName, kind, datatype, index):
   if scope == 'global':
@@ -477,6 +583,13 @@ def getBaseAddress(scope, kind, datatype):
         return AddressStart.Global.ListDec
       if datatype == 'bool':
         return AddressStart.Global.ListBool
+    else:
+      if datatype == 'int':
+        return AddressStart.Local.ListInt
+      if datatype == 'decimal':
+        return AddressStart.Local.ListDec
+      if datatype == 'bool':
+        return AddressStart.Local.ListBool
   
 def printList(datatype, address):
   items = []
@@ -489,6 +602,15 @@ def printList(datatype, address):
         if not node['next']:
           break
         node = memory['global']['node'][datatype][node['next']]
+  else:
+    head = memory['local'][currentScope]['list'][datatype][address]['head']
+    if head != None:
+      node = memory['local'][currentScope]['node'][datatype][head]
+      while True:
+        items.append(node['value'])
+        if not node['next']:
+          break
+        node = memory['local'][currentScope]['node'][datatype][node['next']]
   print(items)
       
     
@@ -632,12 +754,8 @@ def execute(quadruples):
       currentPointer += 1
     elif current['operation'] == Operations.Print:
       # Get value and print
-      scope, kind, datatype, realAddress = deconstructAddress(current['result'])
-      if kind == 'list':
-        printList(datatype, realAddress)
-      else:
-        value = extractValueFromAddress(current['result'])
-        print(value)
+      address = current['result']
+      printValue(address)
       # Move to next quad
       currentPointer += 1
     elif current['operation'] == Operations.Read:
@@ -672,12 +790,13 @@ def execute(quadruples):
     elif current['operation'] == Operations.Era:
       # Get second (temporal) era
       secondEra = quadruples[currentPointer+1]
+      thirdEra = quadruples[currentPointer+2]
       # Activate local mem
-      activateLocalMem(current, secondEra)
+      activateLocalMem(current, secondEra, thirdEra)
       # Add to function counter
       functionCount += 1
       # Move pointer 2 quads
-      currentPointer += 2
+      currentPointer += 3
     elif current['operation'] == Operations.Param:
       # Get argument
       argument = extractValueFromAddress(current['left'])
@@ -708,20 +827,6 @@ def execute(quadruples):
       currentScope = saveScope
       # Move to next quad
       currentPointer += 1
-    elif current['operation'] == Operations.Advance:
-      listItem = extractValueFromAddress(current['left'])
-      num = extractValueFromAddress(current['right'])
-      scope, kind, datatype, realAddress = deconstructAddress(current['left'])
-      base = getBaseAddress(currentScope, kind, datatype)
-      finalAddress = base
-      # Move spaces
-      while num > 0:
-        finalAddress = base + listItem['next']
-        listItem = extractValueFromAddress(finalAddress)
-        num -= 1
-      # Write address in memory
-      writeValueInMemory(current['result'], finalAddress)
-      currentPointer += 1
     elif current['operation'] == Operations.Add:
       value = extractValueFromAddress(current['left'])
       addToList(current['result'], value)
@@ -732,6 +837,16 @@ def execute(quadruples):
       # kind, datatype, realAddress = deconstructAddress(address)
       # address = retrieve(currentScope, currentScope, kind, datatype, realAddress)
       removeFromList(value)
+      currentPointer += 1
+    elif current['operation'] == Operations.Sort:
+      address = current['result']
+      sortList(address)
+      currentPointer+=1
+    elif current['operation'] == Operations.Find:
+      value = extractValueFromAddress(current['left'])
+      listAddress = current['right']
+      foundIndex = findValueInList(value, listAddress)
+      writeValueInMemory(current['result'], foundIndex)
       currentPointer += 1
     elif current['operation'] == Operations.End:
       # End the program
